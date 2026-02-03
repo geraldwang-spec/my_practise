@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pythonP"
+version = "0.1.0"
+dependencies = []
+requires-python = ">=3.10"
+
+[tool.setuptools]
+# 關鍵：告訴工具去 src 資料夾找代碼
+package-dir = {"" = "src"}
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.pyright]
+extraPaths = ["src"]
+venvPath = "."
+venv = ".venv"
+
