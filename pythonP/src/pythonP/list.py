@@ -95,6 +95,52 @@ def list_exam():
     }
     print(json.dumps(status_with_score2, indent=4))
 
+def append_and_extend():
+    a: list[Any] = ["a","b"]
+    a.append("c")
+    print(f"append \"c\" = {a}")
+    a.append(["c", "d", "e"])
+    print(f"append array = {a}")
+
+    a.extend(["a", "p", "l", "e"])
+    print(f"extend array={a}")
+    a += ["1","2"]
+    print(f"a+={a}")
+
+    a.insert(1, "b")
+    print(f"a.insert(1, \"b\") = {a}")
+
+    a.remove("b")
+    print(f"a.remove(\"b\") = {a}") # just remove first obj
+
+    b = a.pop()
+    print(f"a.pop = {b}")
+    print(f"after a  = {a}")
+    b = a.pop(2)
+    print(f"a.pop(2) = {b}")
+    print(f"after a  = {a}")
+    print(f"len = {len(a)}")
+
+    numbers = [2,6,4,5]
+    print(f"len={len(numbers)}")
+    print(f"min={min(numbers)}")
+    print(f"max={max(numbers)}")
+    print(f"sum={sum(numbers)}")
+
+def package_unpackage():
+    t = ("foo", "bar", "baz", "qux")
+
+    I, O, U, T = t
+    print(f"I={I}")
+    print(f"O={O}")
+    print(f"U={U}")
+    print(f"T={T}")
+
+    # ValueError: too many values to unpack (expected 3, got 4)
+    # print(f"s1={s1}")
+    # print(f"s2={s2}")
+    # print(f"s3={s3}")
+
 
 
 def list_practise():
@@ -103,4 +149,6 @@ def list_practise():
     # list_and_range()
     # advance_operator()
     # insert_replace_delete()
-    list_exam()
+    # list_exam()
+    # append_and_extend()
+    package_unpackage()
