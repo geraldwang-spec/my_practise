@@ -75,6 +75,9 @@ def exploring_dict():
     print(f"orignal = {inventory}")
     print(f"popitem = {inventory.popitem()}")
     print(f"orignal = {inventory}")
+    print(f"clear = {inventory.clear()}")
+    print(f"orignal = {inventory}")
+
 
 
 def dictionaries_example():
