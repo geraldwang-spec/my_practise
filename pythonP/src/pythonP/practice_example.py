@@ -53,7 +53,7 @@ def Character_Input_System():
             print("Error: Age must be a number. Please try again.")
 
     for i in record:
-        print(f"name: {record[i].name}")
+        print(f"name: {i.name:<10} | 100 years old in: {i.get_100_year}")
 
 def practice_ex():
     print("practice_ex")

@@ -1,5 +1,16 @@
 import sys
+import timeit
 from typing import Any
+
+MLB_teams = {
+    "Colorado": "Rockies",
+    "Chicago": "White Sox",
+    "Boston": "Red Sox",
+    "Minnesota": "Twins",
+    "Milwaukee": "Brewers",
+    "Seattle": "Mariners",
+} 
+
 
 def basically():
     config = {
@@ -79,6 +90,36 @@ def exploring_dict():
     print(f"clear = {inventory.clear()}")
     print(f"orignal = {inventory}")
 
+def membership_in_not_in():
+    print(f"Milwaukee = {'Milwaukee' in MLB_teams}")
+    print(f"Indianapolis = {"Indianapolis" in MLB_teams}")
+    print(f"Indianapolis = {"Indianapolis" not in MLB_teams}")
+
+    print(f"Milwaukee = {'Milwaukee' in MLB_teams.keys()}")
+    print(f"Indianapolis = {"Indianapolis" in MLB_teams.keys()}")
+    print(f"Indianapolis = {"Indianapolis" not in MLB_teams.keys()}")
+
+    time_in_dict = timeit.timeit('"Milwaukee" in MLB_teams', globals=globals(), number=1000000)
+    time_in_keys = timeit.timeit(
+        '"Milwaukee" in MLB_teams.keys()', globals=globals(), number=1000000
+    )
+    time_not_in_dict = timeit.timeit(
+        '"Indianapolis" in MLB_teams', globals=globals(), number=1000000
+    )
+    time_not_in_keys = timeit.timeit(
+        '"Indianapolis" in MLB_teams.keys()', globals=globals(), number=1000000
+    )
+    
+    print(
+        f"{time_in_dict     = } seconds",
+        f"{time_in_keys     = } seconds",
+        f"{time_not_in_dict = } seconds",
+        f"{time_not_in_keys = } seconds",
+        sep="\n",
+    )
+
+
+
 def sort_operator():
     students = {
         "Alice": 89.5,
@@ -123,6 +164,7 @@ def dictionaries_example():
     # exploring_dict()
     # sort_operator()
     # dict_practise()
+    # membership_in_not_in()
     compare_list_generator()
 
     
