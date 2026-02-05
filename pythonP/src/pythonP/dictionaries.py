@@ -1,3 +1,4 @@
+import sys
 from typing import Any
 
 def basically():
@@ -78,6 +79,38 @@ def exploring_dict():
     print(f"clear = {inventory.clear()}")
     print(f"orignal = {inventory}")
 
+def sort_operator():
+    students = {
+        "Alice": 89.5,
+        "Bob": 76.0,
+        "Charlie": 92.3,
+        "Diana": 84.7,
+        "Ethan": 88.9,
+        "Fiona": 95.6,
+        "George": 73.4,
+        "Hannah": 81.2,
+    }
+    print(f"students = {students}")
+    print(f"students sort = {dict(sorted(students.items(), key=lambda item: item[1]))}")
+    print(f"students sort = {dict(sorted(students.items(), key=lambda item: item[0]))}")
+    print(f"students sort2 = {dict(sorted(students.items(), key=lambda x: (-x[1], x[0])))}")
+
+def dict_practise():
+    names = ['手機', '電腦', '耳機', '測試品']
+    stocks = [15, 8, 0]
+
+    print(dict(sorted(filter(lambda x: x[1],  zip(names, stocks)), key=lambda x: x[1], reverse=True)))
+
+def compare_list_generator():
+    n = 10000000
+    my_list =  [i for i in range(n)]
+    list_size = sys.getsizeof(my_list) / 1024
+
+    my_gen = (i for i in range(n))
+    gen_size = sys.getsizeof(my_gen) / 1024
+
+    print(f"list size = {list_size:2f} KB")
+    print(f"gen size = {gen_size:2f} KB")
 
 
 def dictionaries_example():
@@ -87,6 +120,9 @@ def dictionaries_example():
     # dict_operator()
     # enumerate_operator()
     # fromkeys_operator()
-    exploring_dict()
+    # exploring_dict()
+    # sort_operator()
+    # dict_practise()
+    compare_list_generator()
 
     

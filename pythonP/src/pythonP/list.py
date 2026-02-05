@@ -1,6 +1,8 @@
 from typing import Any
 import json
 
+from pythonP.practice_example import practice_ex
+
 def list_and_tuples():
     color: list[Any] = ["red", "green", "blue", "yellow"]
     person = ("Jane", 25, "python developer", "Canada")
@@ -145,10 +147,12 @@ def package_unpackage():
 
 def list_practise():
     print("list_practise")
+    practice_ex()
     # list_and_tuples()
     # list_and_range()
     # advance_operator()
     # insert_replace_delete()
     # list_exam()
     # append_and_extend()
-    package_unpackage()
+    # package_unpackage()
+
