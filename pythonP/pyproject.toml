@@ -21,3 +21,10 @@ extraPaths = ["src"]
 venvPath = "."
 venv = ".venv"
 
+[project.optional-dependencies]
+dev = [
+  "pyinstaller",
+  "pytest",
+]
+
+

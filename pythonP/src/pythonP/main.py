@@ -1,3 +1,4 @@
+from pythonP.advance_example.Character_Input_adv import advance_character_input
 from pythonP.conditions import conditionsOperators
 from pythonP.dictionaries import dictionaries_example
 from pythonP.io import io_example
@@ -14,8 +15,8 @@ def practise():
     # list_practise()
     # dictionaries_example()
     # io_example()
-    practice_ex()
-
+    # practice_ex()
+    advance_character_input()
 
 if __name__ == '__main__':
     # print(f'Sum: {add(1, 2)}')
