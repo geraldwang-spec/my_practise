@@ -1,12 +1,13 @@
 import sys
 import os
 from datetime import datetime
+from typing import override
 
 class AgeSystem_adv:
     """a age system adv"""
-    def __init__(self, name, age) -> None:
-        self.name = name
-        self.__age = age
+    def __init__(self, name: str, age: int) -> None:
+        self.name: str = name
+        self.__age: int = age
 
     @property
     def age(self) -> int:
@@ -25,6 +26,7 @@ class AgeSystem_adv:
     def get_100_year(self) -> int:
         return 100 - self.__age + datetime.now().year
 
+    @override
     def __str__(self) -> str:
         return f"name :{self.name: <10} | age: {self.__age:<3} | 100 old of year: {self.get_100_year}"
 
@@ -34,22 +36,22 @@ class AgeSystem_adv:
         else:
             return os.path.dirname(os.path.abspath(__file__))
 
-    def save_to_file(self, filename="characters.txt"):
+    def save_to_file(self, filename: str ="characters.txt") -> None:
         try:
-            base_path = self.__get_base_path()
-            file_path = os.path.join(base_path,  filename)
+            base_path: str = self.__get_base_path()
+            file_path: str = os.path.join(base_path,  filename)
             print(f"file_path = {file_path}")
             with open(file_path, "a", encoding="utf-8") as f:
-                f.write(f"Name: {self.name}, Age: {self.age}\n")
+                _ = f.write(f"Name: {self.name}, Age: {self.age}\n")
             print(f"Successfully saved {self.name} to {filename}")
         except IOError as e:
             print(f"Error saving to file: {e}")
 
 
-def run_system():
-    record = []
+def run_system() -> None:
+    record: list[AgeSystem_adv] = []
     while True:
-        name = input("Give me your name (enter \"quit\" or \"q\" exit): ")
+        name: str = input("Give me your name (enter \"quit\" or \"q\" exit): ")
         print(f"Your name is {name}")
 
         if name.lower() == 'quit' or name.lower() == 'q':
@@ -57,7 +59,7 @@ def run_system():
             break
 
         try:
-            age_input = input('Give my your age (enter \"quit\" or \"q\" exit):')
+            age_input: str = input('Give my your age (enter \"quit\" or \"q\" exit):')
             if age_input.lower() == 'quit' or name.lower() == "q":
                 print("Goodbye!")
                 break
@@ -86,7 +88,7 @@ def run_system1():
         print(f"3 people_gen size: {people_gen}")
 
 def run_system2():
-    record = []
+    record: list[AgeSystem_adv] = []
     while True:
         name = input("Give me your name (enter \"quit\" or \"q\" exit): ")
         print(f"Your name is {name}")
