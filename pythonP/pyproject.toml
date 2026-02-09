@@ -5,7 +5,12 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pythonP"
 version = "0.1.0"
-dependencies = []
+dependencies = [
+  "ipython",
+  "ipykernel",
+  "pynvim",
+  "jupytext",
+]
 requires-python = ">=3.10"
 
 [tool.setuptools]
@@ -22,9 +27,33 @@ venvPath = "."
 venv = ".venv"
 
 [project.optional-dependencies]
+datasci = [
+  "numpy", 
+  "scipy", 
+  "pandas", 
+  "polars", 
+  "matplotlib", 
+  "seaborn", 
+  "plotly", 
+  "cairosvg",
+]
+ml = [
+  "scikit-learn", 
+  "xgboost", 
+  "lightgbm",
+]
+dl = [
+  "torch", 
+  "torchvision", 
+  "torchaudio",
+]
 dev = [
-  "pyinstaller",
+  "ruff", 
+  "basedpyright", 
   "pytest",
+]
+dist = [
+  "pyinstaller",
 ]
 
 
