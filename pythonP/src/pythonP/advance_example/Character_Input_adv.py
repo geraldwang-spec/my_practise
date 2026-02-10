@@ -112,7 +112,7 @@ def run_system2():
         i.save_to_file()
         print(i)
 
-def advance_character_input():
+def advance_character_input() -> None:
     print("advance character input")
     # run_system()
     # run_system1()
