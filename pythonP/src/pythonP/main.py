@@ -5,7 +5,7 @@ from pythonP.io import io_example
 from pythonP.list import list_practise
 from pythonP.mytest.lambdatest import lambda_example
 from pythonP.practice_example import practice_ex
-
+from pythonP.mytest.exceptions_example import exception_example
 
 def add(a, b):
     return a + b
@@ -18,7 +18,8 @@ def practise():
     # io_example()
     # practice_ex()
     # advance_character_input()
-    lambda_example()
+    # lambda_example()
+    exception_example()
 
 if __name__ == '__main__':
     # print(f'Sum: {add(1, 2)}')
