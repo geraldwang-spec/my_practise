@@ -1,4 +1,5 @@
 from pythonP.advance_example.Character_Input_adv import advance_character_input
+from pythonP.advance_example.leetcode import leetCode_test
 from pythonP.conditions import conditionsOperators
 from pythonP.dictionaries import dictionaries_example
 from pythonP.io import io_example
@@ -21,7 +22,8 @@ def practise():
     # advance_character_input()
     # lambda_example()
     # exception_example()
-    numpy_example()
+    # numpy_example()
+    leetCode_test()
 
 if __name__ == '__main__':
     # print(f'Sum: {add(1, 2)}')
