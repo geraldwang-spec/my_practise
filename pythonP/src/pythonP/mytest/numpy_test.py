@@ -23,6 +23,19 @@ def basic_math()->None:
     logaritm:NDArray[np.int_] = np.log(a)
     print(f"log result: {logaritm}")
 
+    print(f"a array det = {np.round(np.linalg.det(np.array([[1,2],[3,4]])), 2)}")
+
+    print(f"array dot = {np.dot(a, b)}")
+    print(f"array inner = {np.inner(a,b)}")
+    print(f"a mean={np.round(np.mean(a), 2) }, std_dev={np.std(a)}")
+
+    data:NDArray[np.long] = np.random.randint(0,100, 10)
+    print(f"original = {data}")
+    print(f"sort = {np.sort(data)}")
+
+    data2 = np.random.random((5,5))
+    print(f"original data2 = {data2}")
+
 def array_concat_split()->None:
     arr1:NDArray[np.int_] = np.array([1,2,3,4])
     concat_arr:NDArray[np.int_] = np.concatenate((arr1, np.array([5, 6,7])))
