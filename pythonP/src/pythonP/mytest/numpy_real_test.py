@@ -61,19 +61,44 @@ class array_practice:
         print(f"array = {array}")
         min_vol:int = min(array)
         print(f"min = {min_vol}")
-        # result: list[int] = np.where(np.equal(array, min_vol))[0].tolist()
+        # result: list[int] = np.where(np.equal(array, min_vol))[1].tolist()
         result: list[int] = [i for i, x in enumerate(array) if x == min_vol]
         print(f"result = {result}")
         for item in range(len(result)):
-            if result[item] == len(array) - 1 - item:
+            left_idx: int = result[item]
+            right_idx_pos:int = len(array) - 1 - item
+            right_idx_neg:int = -1 * item - 1
+            if left_idx == right_idx_pos:
+                print(f"Skip index {left_idx}: same position, XOR would result in 0")
                 continue
 
-            array[result[item]] ^= array[-1 * item - 1]
-            array[-1 * item - 1] ^= array[result[item]]
-            array[result[item]] ^= array[-1 * item - 1]
+            array[left_idx] ^= array[right_idx_neg]
+            array[right_idx_neg] ^= array[left_idx]
+            array[left_idx] ^= array[right_idx_neg]
 
         print(f"result = {array}")
 
+    def OneArray_05_adv(self)->None:
+        # array: list[int] = np.random.randint(0, 30, 10, dtype=np.int_).tolist()
+        array: list[int] = [10,10,2]
+        print(f"array = {array}")
+        min_vol:int = min(array)
+        print(f"min = {min_vol}")
+        # result: list[int] = np.where(np.equal(array, min_vol))[1].tolist()
+        indices: list[int] = [i for i, x in enumerate(array) if x == min_vol]
+        print(f"indices = {indices}")
+
+        for i, left_idx in enumerate(indices):
+            right_idx: int = len(array) - 1 - i
+
+            if left_idx == right_idx:
+                print(f"Skip index {left_idx}: same position, XOR would result in 0")
+                continue
+
+            # 使用 Pythonic Swap，安全且防呆
+            array[left_idx], array[right_idx] = array[right_idx], array[left_idx]
+        print(f"Final:    {array}")# 使用 Pythonic Swap，安全且防呆
+        
 
 
 def numpy_real_example()->None:
@@ -83,4 +108,5 @@ def numpy_real_example()->None:
     # arrayP.OneArray_03()
     # arrayP.OneArray_04()
     # arrayP.OneArray_04_adv()
-    arrayP.OneArray_05()
+    # arrayP.OneArray_05()
+    arrayP.OneArray_05_adv()
