@@ -130,6 +130,17 @@ class array_practice:
             removed = person.pop(index)
         print(f"last person = {person[0]}")
 
+    def josephus_maths(self, n: int, k: int)->int:
+        survivor: int = 0
+        for i in range(2, n+1):
+            survivor = (survivor + k) % i
+        return survivor
+
+    def OneArray_06_adv1(self)->None:
+        result:int = self.josephus_maths(17, 3)
+        print(f"last person = {result}")
+
+
 def numpy_real_example()->None:
     print("umpy real example")
     arrayP:array_practice = array_practice()
@@ -140,4 +151,5 @@ def numpy_real_example()->None:
     # arrayP.OneArray_05()
     # arrayP.OneArray_05_adv()
     # arrayP.OneArray_06()
-    arrayP.OneArray_06_adv()
+    # arrayP.OneArray_06_adv()
+    arrayP.OneArray_06_adv1()
