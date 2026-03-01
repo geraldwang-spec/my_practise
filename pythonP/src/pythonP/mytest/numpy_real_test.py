@@ -98,8 +98,37 @@ class array_practice:
             # 使用 Pythonic Swap，安全且防呆
             array[left_idx], array[right_idx] = array[right_idx], array[left_idx]
         print(f"Final:    {array}")# 使用 Pythonic Swap，安全且防呆
-        
 
+    def OneArray_06(self)->None:
+        person:list[int] = np.ones(17, dtype=int).tolist()
+        print(f"person = {person}")
+
+        index: int = 0 
+        number: int = 0
+        while person.count(1) > 1:
+            current_index: int = index % 17
+            
+            if person[current_index] == 1:
+                number += 1
+                if number % 3 == 0:
+                    person[current_index] = 0
+            
+            index += 1
+
+        print(f"person = {person}")
+        indices:list[int] = [ i for i, x in enumerate(person) if x == 1]
+        print(f"last position = {indices}")
+
+    def OneArray_06_adv(self)->None:
+        person:list[int] = list(range(17))
+        print(f"person = {person}")
+
+        index: int = 0
+        step: int = 3
+        while len(person) > 1:
+            index = (index + step - 1) % len(person)
+            removed = person.pop(index)
+        print(f"last person = {person[0]}")
 
 def numpy_real_example()->None:
     print("umpy real example")
@@ -109,4 +138,6 @@ def numpy_real_example()->None:
     # arrayP.OneArray_04()
     # arrayP.OneArray_04_adv()
     # arrayP.OneArray_05()
-    arrayP.OneArray_05_adv()
+    # arrayP.OneArray_05_adv()
+    # arrayP.OneArray_06()
+    arrayP.OneArray_06_adv()
