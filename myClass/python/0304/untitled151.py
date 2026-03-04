@@ -1,0 +1,59 @@
+import csv
+import requests
+from bs4 import BeautifulSoup
+url='https://www.ptt.cc/bbs/nba/index.html'
+
+#先說要抓幾頁
+try:
+    max_pages=int(input('你要抓幾頁呢???').strip())
+    
+except:    
+    max_pages=2 #使用者輸入亂掉就預設兩頁
+    
+data=[]
+    
+for page in range(1,max_pages+1):
+    r=requests.get(url)
+    soup=BeautifulSoup(r.text,'html.parser')   #=================================re, r 要確認
+    print(f'=====第{page}頁========')
+    
+    #CSS選擇器  class="r-ent" , 選擇器的上下階層是用 . 隔開
+    posts=soup.select('div.r-ent') 
+    
+    for p  in posts:
+        
+        #等待修改 
+        title_tag=p.select_one('.title a')
+        author_tag=p.select_one('.author') 
+        nrec_tag=p.select_one('.nrec span')   
+        
+        title= title_tag.get_text(strip=True) if title_tag else "" 
+        author= author_tag.get_text(strip=True) if author_tag else ""  
+        nrec= nrec_tag.get_text(strip=True) if nrec_tag else ""  
+            
+        print(f'{nrec:>3}  |{author:<12} | {title} ')
+        data.append([title, author, nrec])
+        # A if 條件 else B
+    btns=soup.select('div.btn-group-paging a')    
+    prev_url=None
+
+    for b in btns:
+        if '上頁' in b.get_text():
+            prev_url='https://www.ptt.cc/'+ b['href']  #屬性
+            break
+        
+    #如果沒有上頁，就提前結束
+    if not prev_url:
+        print('\n找不到上頁，提前結束')
+        break
+        
+    #用上一頁來取代目前頁面，就可以無限循環
+    url=prev_url    
+
+filename='pttnba1.csv'
+with open(filename, 'w', newline='', encoding='utf-8') as f:
+    writer=csv.writer(f)
+    writer.writerow(['標題', '作者', '推文數'])
+    writer.writerows(data)
+
+print(f"{filename} 成功寫入")
