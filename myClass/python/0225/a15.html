@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+    </head>
+    <body>
+        <h2>選擇性輸入</h2>
+        <form onsubmit="showMessage(); return false;">
+            <p>性別選擇(radio:)</p>
+            <input type="radio" name="gender">男
+            <input type="radio" name="gender">女
+
+            <p>興趣選擇 (checkbox:)</p>
+            <input type="checkbox">打球
+            <input type="checkbox">看電影
+            <input type="checkbox">寫程式
+
+            <p>送出按鍵</p>
+            <input type="submit" value="送出">
+        </form>
+
+        <p id="result"></p>
+        <!--以下是java script程式-->
+        <script src="a15.js"></script>
+    </body>
+</html>
+
+

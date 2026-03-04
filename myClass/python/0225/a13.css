@@ -1,0 +1,16 @@
+#p1 {
+    color: rgb(0, 255, 8);
+}
+#p2 {
+    color: rgb(204, 0, 255);
+}
+#p3 {
+    color: rgb(18, 34, 127);
+}
+img {
+    width: 200px;
+}
+img:hover {
+    transform: scale(1.5);
+    transition: 0.5s;
+}
