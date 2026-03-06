@@ -20,7 +20,7 @@ for page in range(1, max_pages+1):
     new_page = url + "?page="+str(page)
     r=requests.get(new_page, headers=headers)
     print(f'status = {r.status_code} url = {new_page}')
-    soup=BeautifulSoup(r.text,'html.parser')   #=================================re, r 要確認
+    soup=BeautifulSoup(r.text,'html.parser')   
     posts=soup.select( 'div.qa-list')
     print(f"===== 第{page}頁 ====")
     for p in posts:
