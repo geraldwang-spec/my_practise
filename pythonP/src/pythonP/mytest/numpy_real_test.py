@@ -140,6 +140,33 @@ class array_practice:
         result:int = self.josephus_maths(17, 3)
         print(f"last person = {result}")
 
+    def OneArray_07(self)->None:
+        arr1:NDArray[np.int_] = np.random.randint(0, 100, 20)
+        arr2:NDArray[np.int_] = arr1.copy()
+
+        print(f"arr1={arr1} \narr2={arr2}")
+
+    def OneArray_08(self)->None:
+        arr1:NDArray[np.int_] = np.random.randint(0, 100, 20)
+        getData: str = input("input number insert array ?? ")
+        print(f"random array = {arr1}")
+        arr1= np.insert(arr1, 0, int(getData))
+        print(f"insert array = {arr1}")
+        arr2 = np.sort(arr1)
+        print(f"sort array = {arr2}")
+
+    def OneArray_09(self)->None:
+        arr1:NDArray[np.int_] = np.random.randint(0,100, 4)
+        arr2:NDarray[np.int_] = np.random.randint(0,100, 4)
+        print(f"arr1={arr1}\narr2{arr2}\n{np.concatenate((arr1,arr2))}")
+        
+        arr3 = np.concatenate(([1,2,3], [4,5,6]), axis=0)
+        print(f"arr3 {arr3}")
+        # arr3 = np.concatenate(([1,2,3], [4,5,6]), axis=1)
+        # print(f"arr3 {arr3}")
+
+        print(f"{np.concatenate(([[1,2], [3,4]], [[5,6],[7,8]]), axis=0)}")
+        print(f"{np.concatenate(([[1,2], [3,4]], [[5,6],[7,8]]), axis=1)}")
 
 def numpy_real_example()->None:
     print("umpy real example")
@@ -152,4 +179,7 @@ def numpy_real_example()->None:
     # arrayP.OneArray_05_adv()
     # arrayP.OneArray_06()
     # arrayP.OneArray_06_adv()
-    arrayP.OneArray_06_adv1()
+    # arrayP.OneArray_06_adv1()
+    # arrayP.OneArray_07()
+    # arrayP.OneArray_08()
+    arrayP.OneArray_09()
