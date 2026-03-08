@@ -21,8 +21,8 @@ def eqn(x: NDArray[np.float64])->NDArray[np.float64]:
     return x + np.cos(x)
 
 def scipy_02()->None:
-    myroot: OptimizeResult = root(eqn, np.array([0.0]))
-    final_x = cast(NDArray[np.float64], myroot.x)
+    myroot:OptimizeResult = root(eqn, np.array([0.0]))
+    final_x:NDArray[np.float64] = cast(NDArray[np.float64], myroot.x)
     print(f"myroot = {final_x}")
 
 def scipy_01()->None:
