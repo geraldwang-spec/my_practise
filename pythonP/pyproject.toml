@@ -55,5 +55,9 @@ dev = [
 dist = [
   "pyinstaller",
 ]
+math = [
+  "scipy",
+  "scipy-stubs"
+]
 
 

@@ -7,6 +7,7 @@ from pythonP.list import list_practise
 from pythonP.mytest.lambdatest import lambda_example
 from pythonP.mytest.numpy_real_test import numpy_real_example
 from pythonP.mytest.numpy_test import numpy_example
+from pythonP.mytest.scipy_test import scipy_example
 from pythonP.practice_example import practice_ex
 from pythonP.mytest.exceptions_example import exception_example
 
@@ -25,7 +26,8 @@ def practise():
     # exception_example()
     # numpy_example()
     # leetCode_test()
-    numpy_real_example()
+    # numpy_real_example()
+    scipy_example()
 
 if __name__ == '__main__':
     # print(f'Sum: {add(1, 2)}')
