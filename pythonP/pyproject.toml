@@ -18,6 +18,7 @@ requires-python = ">=3.10"
 package-dir = {"" = "src"}
 
 [tool.pytest.ini_options]
+include = ["src", "tests"]
 pythonpath = ["src"]
 testpaths = ["tests"]
 
@@ -59,6 +60,11 @@ dist = [
 math = [
   "scipy",
   "scipy-stubs"
+]
+web = [
+  "fastapi",
+  "fastapi-cli",
+  "uvicorn",
 ]
 
 

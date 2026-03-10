@@ -4,6 +4,7 @@ from pythonP.conditions import conditionsOperators
 from pythonP.dictionaries import dictionaries_example
 from pythonP.io import io_example
 from pythonP.list import list_practise
+from pythonP.mytest import fastapi_test
 from pythonP.mytest.lambdatest import lambda_example
 from pythonP.mytest.numpy_real_test import numpy_real_example
 from pythonP.mytest.numpy_test import numpy_example
@@ -27,7 +28,7 @@ def practise():
     # numpy_example()
     # leetCode_test()
     # numpy_real_example()
-    scipy_example()
+    # scipy_example()
 
 if __name__ == '__main__':
     # print(f'Sum: {add(1, 2)}')
