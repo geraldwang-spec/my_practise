@@ -33,6 +33,7 @@ datasci = [
   "pandas", 
   "polars", 
   "matplotlib", 
+  "matplotlib-stubs",
   "seaborn", 
   "plotly", 
   "cairosvg",
