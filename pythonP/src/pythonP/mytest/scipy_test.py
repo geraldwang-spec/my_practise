@@ -6,7 +6,24 @@ from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 import scipy
 from scipy import constants
-from scipy.optimize import OptimizeResult, root
+from scipy.optimize import OptimizeResult, root, minimize
+from scipy.sparse import csr_matrix
+
+def scipy_06()->None:
+    arr:NDArray[np.int_] = np.array([0,0,0,0,0,1,1,0,2])
+    print(csr_matrix(arr))
+
+    arr:NDArray[np.int_] = np.array([[0,0,0],[0,0,1],[1,0,2]])
+    print(csr_matrix(arr))
+    print(csr_matrix(arr).data)
+
+def function01(x:NDArray[np.float64])->NDArray[np.float64]:
+    return x**2 + x +2
+
+def scipy_05()->None:
+    mymin:OptimizeResult= minimize(function01, 0, method='BFGS')
+    print(mymin)
+
 
 def system(vars: NDArray[np.float64])->NDArray[np.float64]:
     x:float = cast(float, vars[0])
@@ -65,5 +82,7 @@ def scipy_example()->None:
     # scipy_01()
     # scipy_02()
     # scipy_03()
-    scipy_04()
+    # scipy_04()
+    # scipy_05()
+    scipy_06()
 

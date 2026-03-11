@@ -27,6 +27,9 @@ extraPaths = ["src"]
 venvPath = "."
 venv = ".venv"
 
+[tool.fastapi]
+entrypoint = "src.pythonP.mytest.fastapi_test:app"
+
 [project.optional-dependencies]
 datasci = [
   "numpy", 
