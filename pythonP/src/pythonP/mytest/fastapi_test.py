@@ -41,8 +41,20 @@ def fastapi_01()->FastAPI:
             return {"model_name":model_name, "message":"model02"}
 
         return {"model_name":model_name, "message":"model03"}
+    @app.get("/file/{file_path:path}")
+    async def read_file(file_path:str)->dict[str,str]:
+        return {"file_path": file_path}
 
+    @app.get("/items/")
+    async def read_items(skip: int = 0, limit:int = 0)->list[dict[str,str]]:
+        fake_items_db:list[dict[str,str]] = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"}]
+        return fake_items_db[skip:skip+limit]
 
+    @app.get("/item_test/{item_id}")
+    async def read_item_01(item_id:str, q:str|None = None)->dict[str,str]:
+        if q:
+            return {"item_id":item_id, "q":q}
+        return {"item_id":item_id}
     return app
 
 app:FastAPI = fastapi_01()
