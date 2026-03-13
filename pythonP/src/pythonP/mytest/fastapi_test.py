@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Any
 from fastapi import FastAPI
 
 apple:str = "QOO"
@@ -7,6 +8,13 @@ class ModelName(str, Enum):
     model01 = "model01"
     model02 = "model02"
     model03 = "model03"
+
+class BasicMath:
+    def __init__(self) -> None:
+        pass
+    def add(self, x:int, y:int)->int:
+        return x+y
+
 
 def fastapi_01()->FastAPI:
     app:FastAPI = FastAPI(
@@ -55,6 +63,39 @@ def fastapi_01()->FastAPI:
         if q:
             return {"item_id":item_id, "q":q}
         return {"item_id":item_id}
+
+    @app.get("/items_test1/{item_id}")
+    async def read_item_02(item_id:str, q:str | None=None, short:bool = False)->dict[str,str]:
+        item:dict[str,str] = {"item_id":item_id}
+        if q:
+            item.update({"q":q})
+        if not short:
+            item.update({"description":"This is an amazing item that  has a long description"})
+
+        return item
+    @app.get('/items_test2/')
+    async def read_item03(item_id:str, user_id:str,  q:str |None=None)->dict[str,str]:
+        global apple
+        item:dict[str,str] = {"item_id":apple}
+        if q:
+            item.update({"q":q})
+        if user_id:
+            item.update({"test": user_id})
+        return item
+    @app.get('/item_test3/{item_id}')
+    async def read_item04(item_id:str, needy:str, skip:int, limit:int |None =None)->dict[str,str]:
+        item:dict[str,Any] = {"item_id":item_id, "needy":needy, "skip":skip, "limit": limit}
+        return item
+    @app.get(path='/item_test4/add/{x}/{y}')
+    async def read_item05(x:int, y:int)->dict[str,str]:
+        bb:BasicMath = BasicMath()
+        result:str = str(bb.add(x,  y))
+        return {"x+y":result}
+    @app.get(path='/item_test5/add/')
+    async def item_test6(x:int, y:int)->dict[str,str]:
+        bb:BasicMath = BasicMath()
+        return {"x+y":str(bb.add(x,y))}
+
     return app
 
 app:FastAPI = fastapi_01()
