@@ -1,5 +1,8 @@
 # basedpyright: typeCheckingMode=standard, reportUnknownMemberAccess=false, reportUnknownVariableType=false, reportGeneralTypeIssues=false, reportMissingTypeArgument=false, reportCallIssue=false
+from dataclasses import dataclass
+from math import e
 import time
+from typing import Any
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 #from selenium.webdriver.common.keys import Keys
@@ -7,6 +10,43 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
+import requests
+from requests import Response
+from datetime import datetime
+
+@dataclass
+class Stock:
+    id:str
+    tradeData:int
+
+    @property
+    def trade_Data(self)->str:
+        dt:datetime = datetime.fromtimestamp(self.tradeData / 1000)
+        return dt.strftime('%Y-%m-%d')
+
+
+def request_practise()->None:
+    url:str = "https://www.wantgoo.com/investrue/all-quote-info"
+    headers:dict[str,str] = {
+        "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+        "Referer":"https://www.wantgoo.com/stock/ranking/top-gainer"
+    }
+
+    try:
+        response:Response = requests.get(url=url, headers=headers)
+        if response.status_code != 200:
+            print(f"get data fail: {response.status_code}")
+            return
+
+        all_stocks:Any = response.json()
+        print(f"len = {len(all_stocks)}")
+        
+        # ss:Stock = Stock(id='ddd',tradeData=232323)
+
+
+    except Exception as e:
+        print(f"Error Message={e}")
+
 
 def sub_number(url:str)->str:
     #options:Options = Options()
@@ -55,4 +95,5 @@ def wantgoo()->None:
 
 
 if __name__ == "__main__":
-    wantgoo()
+    # wantgoo() # higher fail rate
+    request_practise()
