@@ -49,21 +49,22 @@ def process_stocks(all_json:list[dict[str,Any]])->list[Stock]:
     for i, s_dict in enumerate(all_json, 0):
         obj:Stock = dict_to_class(Stock, s_dict)
         stock_object.append(obj)
-        print(f"{i} | \ 
-                {stock_object[i].id} | \
-                {stock_object[i].tradeData} | \
-                {stock_object[i].time} |\
-                {stock_object[i].flat} |\
-                {stock_object[i].floor} |\
-                {stock_object[i].ceil} |\
-                {stock_object[i].open} |\
-                {stock_object[i].high} |\
-                {stock_object[i].low} |\
-                {stock_object[i].close} |\
-                {stock_object[i].millionAmount} |\
-                {stock_object[i].previousClose} |\
-                {stock_object[i].previousVolume} |\
-                {stock_object[i].previousMillionAmount}")
+        print(f""" {i} |  
+                {stock_object[i].id} | 
+                {stock_object[i].tradeData} | 
+                {stock_object[i].time} |
+                {stock_object[i].flat} |
+                {stock_object[i].floor} |
+                {stock_object[i].ceil} |
+                {stock_object[i].open} |
+                {stock_object[i].high} |
+                {stock_object[i].low} |
+                {stock_object[i].close} |
+                {stock_object[i].millionAmount} |
+                {stock_object[i].previousClose} |
+                {stock_object[i].previousVolume} |
+                {stock_object[i].previousMillionAmount}
+              """)
 
     return stock_object
 
