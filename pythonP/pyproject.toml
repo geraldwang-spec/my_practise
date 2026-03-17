@@ -68,6 +68,10 @@ web = [
   "fastapi",
   "fastapi-cli",
   "uvicorn",
+  "requests", 
+]
+ui = [
+  "selenium"
 ]
 
 
