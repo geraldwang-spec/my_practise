@@ -16,7 +16,7 @@ from datetime import datetime
 @dataclass
 class Stock:
     id:str
-    tradeData:int
+    tradeDate:int
     time:int
     flat:float
     floor:float
@@ -32,9 +32,19 @@ class Stock:
 
 
     @property
-    def trade_Data(self)->str:
-        dt:datetime = datetime.fromtimestamp(self.tradeData / 1000)
+    def trade_date(self)->str:
+        dt:datetime = datetime.fromtimestamp(self.tradeDate / 1000)
         return dt.strftime('%Y-%m-%d')
+
+    @property
+    def time_date(self)->str:
+        dt:datetime = datetime.fromtimestamp(timestamp=self.time/1000)
+        return dt.strftime(format='%Y-%m-%d')
+
+    def price_change(self)->float:
+        if self.flat == 0:
+            return 0.0
+        return round(number=((self.close-self.flat)/self.flat)*100)
 
 def dict_to_class[T](cls: type[T], data: dict[str, object]) ->T:
     from dataclasses import fields, is_dataclass
@@ -44,27 +54,13 @@ def dict_to_class[T](cls: type[T], data: dict[str, object]) ->T:
     filtered_data:dict[str,object] = {k: data.get(k,0) for k in target_fields}
     return cls(**filtered_data)
 
-def process_stocks(all_json:list[dict[str,Any]])->list[Stock]:
+def process_stocks(all_json:list[dict[str,object]])->list[Stock]:
     stock_object:list[Stock]=[]
     for i, s_dict in enumerate(all_json, 0):
         obj:Stock = dict_to_class(Stock, s_dict)
         stock_object.append(obj)
-        print(f""" {i} |  
-                {stock_object[i].id} | 
-                {stock_object[i].tradeData} | 
-                {stock_object[i].time} |
-                {stock_object[i].flat} |
-                {stock_object[i].floor} |
-                {stock_object[i].ceil} |
-                {stock_object[i].open} |
-                {stock_object[i].high} |
-                {stock_object[i].low} |
-                {stock_object[i].close} |
-                {stock_object[i].millionAmount} |
-                {stock_object[i].previousClose} |
-                {stock_object[i].previousVolume} |
-                {stock_object[i].previousMillionAmount}
-              """)
+        row_data = " | ".join(map(str, vars(obj).values()))
+        print(f"{i} | {row_data}")
 
     return stock_object
 
@@ -75,7 +71,7 @@ def request_practise()->None:
         "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
         "Referer":"https://www.wantgoo.com/stock/ranking/top-gainer"
     }
-
+ 
     try:
         response:Response = requests.get(url=url, headers=headers)
         if response.status_code != 200:
@@ -84,9 +80,11 @@ def request_practise()->None:
 
         all_stocks:Any = response.json()
         print(f"len = {len(all_stocks)}")
-        process_stocks(all_json=all_stocks)
+        stocks:list[Stock] = process_stocks(all_json=all_stocks)
+
+
+
         
-        # ss:Stock = Stock(id='ddd',tradeData=232323)
 
 
     except Exception as e:
