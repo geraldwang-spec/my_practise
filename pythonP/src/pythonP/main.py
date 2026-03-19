@@ -40,4 +40,3 @@ if __name__ == '__main__':
     else:
         if sys.argv[1] == "stocks":
             stock_init()
-    # print(f'Sum: {add(1, 2)}')

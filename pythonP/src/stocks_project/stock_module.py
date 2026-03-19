@@ -1,5 +1,15 @@
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Optional
+
+@dataclass
+class StockData:
+    industry_category:str=""
+    stock_id:str=""
+    stock_name:str=""
+    type:str=""
+    date:str=""
+
 
 @dataclass
 class Stock:
@@ -17,7 +27,7 @@ class Stock:
     previousClose:float
     previousVolume:float
     previousMillionAmount:float
-
+    stockData:Optional[StockData] = None
 
     @property
     def trade_date(self)->str:
@@ -32,4 +42,4 @@ class Stock:
     def price_change(self)->float:
         if self.flat == 0:
             return 0.0
-        return round(number=((self.close-self.flat)/self.flat)*100)
+        return round(number=((self.close-self.flat)/self.flat)*100, ndigits= 2)
