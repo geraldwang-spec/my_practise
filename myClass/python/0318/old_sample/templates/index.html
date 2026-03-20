@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>My Web picture test</title>
+  <link rel="stylesheet" type="" href="{{ url_for('static',filename='style.css') }}">
+</head>
+
+<body>
+  <h1>My first flask web(my cute dog)</h1>
+  <div class="card">
+    <img src="static/dog1.jpg" width="300" alt="dog1">
+    <p>this is my dog!</p>
+    <img src="{{ url_for('static',filename='dog.jpg') }}" width="300" alt="dog">
+    <p>this is cute dog</p>
+    <button type="" onclick="sayhi()">click</button>
+    <button type="" onclick="like()">like</button>
+    <p id="count">0</p>
+  </div>
+
+  <script>
+    function sayhi() {
+      alert("yes, it is so cute....");
+    }
+    let num = 0;
+    function like() {
+      num++;
+      document.getElementById("count").innerHTML = num;
+    }
+  </script>
+</body>
+
+</html>

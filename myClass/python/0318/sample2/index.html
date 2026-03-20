@@ -1,0 +1,12 @@
+{% for item in titles %}
+    <div class="card">
+        <p>{{ item.title }}</p>
+
+        {% if item.link != "#" %}
+            <a href="{{ item.link }}" target="_blank">👉 查看文章</a>
+        {% else %}
+            <span style="color:red;">❌ 無法查看</span>
+        {% endif %}
+    </div>
+{% endfor %}
+

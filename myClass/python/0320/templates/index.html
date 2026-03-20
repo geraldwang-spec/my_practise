@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>聯成便當網</title>
+  <link rel="stylesheet" type="" href="{{ url_for('static',filename='style.css') }}">
+</head>
+
+<body>
+  <h1>聯成便當網</h1>
+  <div class="container">
+    {% for item in products %}
+    <div class="card">
+      <img src="{{ url_for('static',filename=item.img) }}" width="300" alt="{{ item.title }}">
+      <h3>{{item.title}}</h3>
+      <p>價格:{{item.price}}</p>
+      <button onclick="buy({{ loop.index0 }})">訂購</button>
+      <p id="buy{{ loop.index0 }}">0</p>
+    </div>
+    {% endfor %}
+  </div>
+  <button onclick="showCart()">查看購物車</button>
+  <div id="cart">
+    <h2>購物車</h2>
+    <div id="cartList"></div>
+    <p class="total_dollars" id="totalprice"></p>
+  </div>
+  <script>
+    let buys=[]
+    {% for item in products %}
+    buys.push(0)
+    {% endfor %}
+    function buy(i){
+      buys[i]++;
+      document.getElementById("buy" + i).innerHTML=buys[i];
+    }
+    function showCart() {
+      let text="";
+      let total = 0; // total
+      {% for item in products %}
+        if (buys[{{loop.index0}}] > 0) {
+          text += "{{item.title}} x" + buys[{{loop.index0}}] + "<br>";
+
+          // total
+          total += buys[{{loop.index0}}] * {{item.price}};
+        }
+      {% endfor %}
+      if (text == "") {
+        text = "購物車是空的";
+      }
+
+      document.getElementById("cartList").innerHTML=text;
+      document.getElementById("totalprice").innerHTML="總共 = " + total+" 元";
+    }
+  </script>
+</body>
+
+</html>
