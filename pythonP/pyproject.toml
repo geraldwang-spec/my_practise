@@ -69,7 +69,8 @@ web = [
   "fastapi-cli",
   "uvicorn",
   "requests", 
-  "flask"
+  "flask",
+  "flask-cors",
 ]
 ui = [
   "selenium"
