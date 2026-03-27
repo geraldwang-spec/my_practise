@@ -1,6 +1,8 @@
 from ssl import Options
 from tkinter import wantobjects
 from unittest import result
+from flask import Flask
+from flask.json import jsonify
 import requests
 from typing import Any, Optional
 from requests import Response
@@ -102,22 +104,23 @@ class stock_process_module:
 
         return stock_object
     
-    def top_gainer_stock_tw(self, tw_stock:list[Stock])->None:
+    def top_gainer_stock_tw(self, tw_stock:list[Stock])->list[Stock]:
         # log_data:str = ""
         change_sorts:list[Stock] = sorted(tw_stock, 
                                         key=lambda s: s.price_change(),
                                         reverse = True)
 
-        for i, s in enumerate(change_sorts):
-            # log_data +=f"{i} | {s.id} | {s.stockData.stock_name} | {s.price_change()}\n" 
-            print(f"{i} | {s.id} | {s.stockData.stock_name} | {s.price_change()}")
-            
+        # for i, s in enumerate(change_sorts[:10]):
+        #     # log_data +=f"{i} | {s.id} | {s.stockData.stock_name} | {s.price_change()}\n" 
+        #     print(f"{i} | {s.id} | {s.stockData.stock_name} | {s.price_change()}")
+        #
         
         # with open("stock.txt", "w", encoding="utf-8") as f:
         #     f.write(log_data)
+        return change_sorts
 
 
-    def process_stocks_data(self)->None:
+    def process_stocks_data(self, select:int)->list[dict[str,str]]:
         wnatgoo_data:list[Stock] | None = self.all_stock_current_data()
         if wnatgoo_data is None:
             print("wantgoo.com get data fail")
@@ -150,7 +153,23 @@ class stock_process_module:
         # print("\n--- 未知標的 (指數/權證/美股) ---")
         # for i, s in enumerate(unknown_stocks[:10]):
         #     print(f"{i} | {s.id} | unknow")
-        self.top_gainer_stock_tw(valid_stocks)
+        sample_data:list[dict[str, str]] = []
+        if select == 0:
+            show_stocks:list[Stock] = self.top_gainer_stock_tw(tw_stock=valid_stocks)
+
+            for i, s in enumerate(show_stocks[:100]):
+                stock_info:dict[str,str] ={
+                    "number":str(i),
+                    "id":str(s.id),
+                    "name":str(s.stockData.stock_name),
+                    "price":str(s.price_change())
+                }
+                 
+                sample_data.append(stock_info)
+
+        return sample_data   
+
+
 
         
 

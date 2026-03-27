@@ -1,23 +1,52 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
-<html lang="">
+<html>
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title></title>
-  <link href="css/style.css" rel="stylesheet">
+  <meta charset="utf-8">
+  <title>Hello GitHub</title>
+  <script>
+    (function () {
+      var s = document.createElement('script');
+      s.src = "/static/demo.js?t=" + new Date().getTime();
+      s.async = true;
+      document.head.appendChild(s);
+    })();
+  </script>
 </head>
 
 <body>
   <style>
-    p {
+    h1 {
       color: red;
     }
-  </style>
-  <h1>apple QOO</h1>
-  <p>Test tunnel</p>
 
+    p {
+      color: blue;
+    }
+  </style>
+  <h1>Test html</h1>
+  <h1>QOO</h1>
+  <div id="apple"></div>
+  <a href="/login">
+    <button type="">login</button>
+  </a>
+  <a href="/games">
+    <button type="">games</button>
+  </a>
+  <a href="/camera">camera</a>
+  <button id="conBt" onclick="connectToApi()">Connection</button>
+  <button id="stock_price" onclick="stocks_price()">Stocks</button>
+  <table>
+    <thead>
+      <tr>
+        <th>名次</th>
+        <th>股票名稱號碼</th>
+        <th>股票名稱</th>
+        <th>漲幅%</th>
+      </tr>
+    <tbody id="stocks_list"> </tbody>
+    </thead>
+  </table>
 </body>
 
 </html>

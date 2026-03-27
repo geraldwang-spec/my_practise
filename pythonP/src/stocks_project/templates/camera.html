@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CIE 1931 影像擷取測試
+  </title>
+  <!-- <link href="css/style.css" rel="stylesheet"> -->
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #f0f0f0;
+    }
+
+    .container {
+      position: relative;
+      margin-top: 20px;
+    }
+
+    #video {
+      border: 2px solid #333;
+      border-radius: 8px;
+      background: #000;
+    }
+
+    /* 瞄準點 */
+    .reticle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 20px;
+      height: 20px;
+      border: 2px solid white;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+      pointer-events: none;
+    }
+
+    .info-panel {
+      margin-top: 20px;
+      padding: 15px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .color-preview {
+      width: 50px;
+      height: 50px;
+      border: 1px solid #ccc;
+      margin: 10px 0;
+      border-radius: 4px;
+    }
+
+    .container1 {
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    /* 容器設定 */
+    .switch-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 10px 0;
+    }
+
+    /* 滑動開關外框 */
+    .slide-switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 22px;
+    }
+
+    /* 隱藏原始 checkbox */
+    .slide-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    /* 滑道 */
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .3s;
+      border-radius: 22px;
+    }
+
+    /* 圓鈕 */
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+
+    /* 當被勾選 (Manual) 時的顏色 */
+    input:checked+.slider {
+      background-color: #4CAF50;
+      /* 成功綠，也可改用您的品牌色 */
+    }
+
+    /* 圓鈕滑動位移 */
+    input:checked+.slider:before {
+      transform: translateX(22px);
+    }
+  </style>
+</head>
+
+<body>
+  <h2>CIE 1931 前端影像測試</h2>
+
+  <div class="container">
+    <video id="video" width="640" height="480" autoplay playsinline></video>
+    <div class="reticle"></div>
+  </div>
+
+  <div class="container1">
+    <div class="info-panel">
+      <strong>中心點 RGB 數值：</strong>
+      <div id="rgb-text">R: - , G: - , B: -</div>
+      <div id="color-box" class="color-preview"></div>
+      <p><small>提示：請確保環境光穩定以利後續 CIE 轉換</small></p>
+    </div>
+    <div class="info-panel">
+      <strong>白平衡模式</strong>
+      <div class="switch-wrapper">
+        <span>自動</span>
+        <label class="slide-switch">
+          <input type="checkbox" id="wb-logic-switch">
+          <span class="slider"></span>
+        </label>
+        <span>手動</span>
+      </div>
+
+      <div id="manual-settings" style="display: none; margin-top: 15px;">
+        <label>色溫調整: <span id="temp-display">4500</span>K</label>
+        <input type="range" id="wb-slider" min="2000" max="8000" step="100" value="4500" style="width: 100%;">
+      </div>
+    </div>
+  </div>
+
+  <canvas id="helper-canvas" width="640" height="480" style="display:none;"></canvas>
+  <script>
+    let videoTrack;
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('helper-canvas');
+    const ctx = canvas.getContext('2d', {willReadFrequently: true});
+    const rgbText = document.getElementById('rgb-text');
+    const colorBox = document.getElementById('color-box');
+
+    const wbLogicSwitch = document.getElementById('wb-logic-switch');
+    const manualSettings = document.getElementById('manual-settings');
+    const wbSlider = document.getElementById('wb-slider');
+    const tempDisplay = document.getElementById('temp-display');
+
+    // 監聽開關切換
+    wbLogicSwitch.addEventListener('change', (e) => {
+      if (e.target.checked) {
+        // 切換到「手動」
+        manualSettings.style.display = 'block';
+        applyWB('manual', wbSlider.value);
+      } else {
+        // 切換到「自動」
+        manualSettings.style.display = 'none';
+        applyWB('continuous');
+      }
+    });
+
+    // 監聽數值拉桿
+    wbSlider.addEventListener('input', (e) => {
+      tempDisplay.innerText = e.target.value;
+      applyWB('manual', e.target.value);
+    });
+
+    // 封裝相機控制函數
+    async function applyWB(mode, value) {
+      // 這裡放入您之前的 track.applyConstraints 邏輯
+      // console.log(`目前設定模式：${mode}, 數值：${value || '自動'}`);
+      if (!videoTrack) return;
+      try {
+        // const constraints = {
+        //   advanced: [{
+        //     whiteBalanceMode: mode,
+        //     exposureMode: mode === 'manual' ? 'manual' : 'continuous',
+        //     colorTemperature: parseInt(value),
+        //   }]
+        // }
+        const settings = {
+          whiteBalanceMode: mode,
+          exposureMode: mode === 'manual' ? 'manual' : 'continuous',
+        }
+
+        if (mode == 'manual' && value) {
+          settings.colorTemperature = parseInt(value);
+        }
+        // else {
+        //   constraints.advanced[0].colorTemperature = parseInt(value);
+        //   constraints.advanced[0].exposureMode = 'continuous';
+        // }
+
+        const constraints = {
+          advanced: [settings]
+        }
+        await videoTrack.applyConstraints(constraints);
+        console.log(`sync HW ${mode} @ ${value || 'Auto'}K`)
+
+      } catch (err) {
+        console.error("can't to use white balance setting:", err)
+      }
+    }
+
+    async function init() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: {facingMode: "environment", width: 640, height: 480},
+          audio: false
+        });
+        video.srcObject = stream;
+
+        videoTrack = stream.getVideoTracks()[0];
+        const settings = videoTrack.getSettings();
+        const capabilities = videoTrack.getCapabilities();
+
+        console.log("當前設定:", settings.colorTemperature);
+        console.log("支援範圍:", capabilities.colorTemperature.min, "-", capabilities.colorTemperature.max);
+        console.log("調整步進:", capabilities.colorTemperature.step);
+
+        if (capabilities.colorTemperature) {
+          wbSlider.min = capabilities.colorTemperature.min;
+          wbSlider.max = capabilities.colorTemperature.max;
+          tempDisplay.innerText = wbSlider.value
+        }
+        // if (capabilities.whiteBalanceMode?.includes('manual')) {
+        //   // await track.applyConstraints({
+        //   //   advanced: [{
+        //   //     whiteBalanceMode: 'manual',
+        //   //     colorTemperature: 4500
+        //   //   }]
+        //   // });
+        //   console.log('white balance maunal mode (4500K)');
+        // }
+
+        // 開始循環讀取數值
+        requestAnimationFrame(updateFrame);
+      } catch (err) {
+        alert("無法開啟攝像頭，請檢查權限或是否為 HTTPS 環境" + err.message);
+      }
+    }
+
+    function updateFrame() {
+      if (video.readyState === video.HAVE_ENOUGH_DATA) {
+        // 將影像繪製到隱藏的畫布
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        // 取得中心點 (320, 240) 的 1x1 像素數據
+        const p = ctx.getImageData(canvas.width / 2, canvas.height / 2, 1, 1).data;
+        const r = p[0], g = p[1], b = p[2];
+
+        // 更新 UI
+        rgbText.innerText = `R: ${r}, G: ${g}, B: ${b}`;
+        colorBox.style.backgroundColor = `rgb(${r},${g},${b})`;
+      }
+      requestAnimationFrame(updateFrame);
+    }
+
+    init();
+  </script>
+</body>
+
+</html>
