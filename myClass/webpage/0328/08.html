@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" rel="stylesheet">
+</head>
+<!-- <i class="fa-regular fa-eye"></i> -->
+
+<body>
+  <form action="#" method="post">
+    <input type="text" name="user" placeholder="input user account" value="" required><br>
+    <input type="password" name="pass" id="pass" placeholder="enter password" value="">
+    <button type="button" id="btn"><i class="fa-solid fa-eye" id="eye"></i></button><br>
+    <label for="">
+      <input type="radio" name="sexy" value="man" checked>man
+    </label>
+    <label for="">
+      <input type="radio" name="sexy" value="girl">girl
+    </label><br>
+    <label for="">
+      <input type="checkbox" name="color" id="red" value="red" checked>
+      red
+    </label>
+    <label for="">
+      <input type="checkbox" name="color" id="green" value="green">
+      green
+    </label>
+    <label for="">
+      <input type="checkbox" name="color" id="blue" value="blue">
+      blue
+    </label><br>
+    <button type="submit">send</button>
+  </form>
+</body>
+
+</html>
+<script>
+  let btn = document.getElementById("btn");
+  let pass = document.getElementById("pass");
+  let eye = document.getElementById("eye");
+  // btn.addEventListener("click", function () {
+  //   if (pass.getAttribute("type") === "password") {
+  //     pass.setAttribute("type", "text");
+  //     eye.setAttribute("class", "fa-regular fa-eye");
+  //   } else {
+  //     pass.setAttribute("type", "password");
+  //     eye.setAttribute("class", "fa-solid fa-eye");
+  //   }
+  // });
+  btn.addEventListener("mouseover", function () {
+    pass.setAttribute("type", "text");
+    eye.setAttribute("class", "fa-regular fa-eye");
+  });
+  btn.addEventListener("mouseout", function () {
+    pass.setAttribute("type", "password");
+    eye.setAttribute("class", "fa-solid fa-eye");
+  })
+</script>
