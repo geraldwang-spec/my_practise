@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CIE 1931 色度圖</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #1a1a2e; color: #e0e0e0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 24px 16px; }
+  h1 { font-size: 22px; font-weight: 500; color: #ffffff; margin-bottom: 4px; letter-spacing: 0.5px; }
+  .subtitle { font-size: 13px; color: #888; margin-bottom: 20px; }
+  .container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; width: 100%; max-width: 1000px; }
+  .canvas-wrap { position: relative; }
+  canvas { border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); display: block; background: #0f0f1a; }
+  .panel { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 20px; min-width: 240px; flex: 1; max-width: 300px; }
+  .panel h2 { font-size: 14px; font-weight: 500; color: #aaa; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px; }
+  .field { margin-bottom: 12px; }
+  .field label { display: block; font-size: 12px; color: #888; margin-bottom: 5px; }
+  .field input { width: 100%; padding: 8px 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: 6px; color: #e0e0e0; font-size: 14px; outline: none; transition: border 0.2s; }
+  .field input:focus { border-color: rgba(100,160,255,0.5); background: rgba(255,255,255,0.08); }
+  .btn-row { display: flex; gap: 8px; margin-top: 4px; }
+  .btn { flex: 1; padding: 9px 12px; border: none; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+  .btn-primary { background: rgba(55,138,221,0.8); color: #fff; }
+  .btn-primary:hover { background: rgba(55,138,221,1); }
+  .btn-secondary { background: rgba(255,255,255,0.06); color: #aaa; border: 1px solid rgba(255,255,255,0.1); }
+  .btn-secondary:hover { background: rgba(255,255,255,0.1); color: #ccc; }
+  .divider { height: 1px; background: rgba(255,255,255,0.08); margin: 16px 0; }
+  .point-list { display: flex; flex-direction: column; gap: 8px; max-height: 280px; overflow-y: auto; }
+  .point-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: rgba(255,255,255,0.03); border-radius: 6px; border: 1px solid rgba(255,255,255,0.06); }
+  .point-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .point-info { flex: 1; }
+  .point-name { font-size: 13px; color: #ddd; }
+  .point-coord { font-size: 11px; color: #666; margin-top: 1px; }
+  .point-remove { width: 18px; height: 18px; border-radius: 50%; background: rgba(255,80,80,0.15); border: none; color: #f88; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; line-height: 1; }
+  .point-remove:hover { background: rgba(255,80,80,0.3); }
+  .empty-msg { font-size: 12px; color: #555; text-align: center; padding: 12px 0; }
+  .info-row { display: flex; justify-content: space-between; font-size: 12px; color: #666; margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<h1>CIE 1931 色度圖</h1>
+<p class="subtitle">CIE 1931 Chromaticity Diagram — xy 色度座標系統</p>
+
+<div class="container">
+  <div class="canvas-wrap">
+    <canvas id="cie" width="640" height="580"></canvas>
+  </div>
+
+  <div class="panel">
+    <h2>標記座標點</h2>
+    <div class="field">
+      <label>x 色度座標 (0 – 0.85)</label>
+      <input type="number" id="ix" min="0" max="0.85" step="0.0001" value="0.3127" placeholder="e.g. 0.3127">
+    </div>
+    <div class="field">
+      <label>y 色度座標 (0 – 0.85)</label>
+      <input type="number" id="iy" min="0" max="0.85" step="0.0001" value="0.3290" placeholder="e.g. 0.3290">
+    </div>
+    <div class="field">
+      <label>標籤名稱 (選填)</label>
+      <input type="text" id="ilabel" placeholder="例：D65、sRGB-R …" maxlength="16">
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="addPoint()">標記點</button>
+      <button class="btn btn-secondary" onclick="clearAll()">全部清除</button>
+    </div>
+    <div class="info-row">
+      <span>按 Enter 快速標記</span>
+    </div>
+
+    <div class="divider"></div>
+    <h2>已標記的點</h2>
+    <div class="point-list" id="plist">
+      <p class="empty-msg">尚無標記點</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const cv = document.getElementById('cie');
+const cx = cv.getContext('2d');
+const W = cv.width, H = cv.height;
+const PAD = { l: 58, r: 24, t: 24, b: 50 };
+const PW = W - PAD.l - PAD.r;
+const PH = H - PAD.t - PAD.b;
+
+function toX(x) { return PAD.l + (x / 0.85) * PW; }
+function toY(y) { return H - PAD.b - (y / 0.85) * PH; }
+
+// CIE 1931 2° CMF (380–780 nm, 5 nm steps)
+const cmf = [
+[380,0.001368,0.000039,0.006450],[385,0.002236,0.000064,0.010550],
+[390,0.004243,0.000120,0.020050],[395,0.007650,0.000217,0.036210],
+[400,0.014310,0.000396,0.067850],[405,0.023190,0.000640,0.110200],
+[410,0.043510,0.001210,0.207400],[415,0.077630,0.002180,0.371300],
+[420,0.134380,0.004000,0.645600],[425,0.214770,0.007300,1.039050],
+[430,0.283900,0.011600,1.385600],[435,0.328500,0.016840,1.622960],
+[440,0.348280,0.023000,1.747060],[445,0.348060,0.029800,1.782600],
+[450,0.336200,0.038000,1.772110],[455,0.318700,0.048000,1.744100],
+[460,0.290800,0.060000,1.669200],[465,0.251100,0.073900,1.528100],
+[470,0.195360,0.090980,1.287640],[475,0.142100,0.112600,1.041900],
+[480,0.095640,0.139020,0.812950],[485,0.057950,0.169300,0.616200],
+[490,0.032010,0.208020,0.465180],[495,0.014700,0.258600,0.353300],
+[500,0.004900,0.323000,0.272000],[505,0.002400,0.407300,0.212300],
+[510,0.009300,0.503000,0.158200],[515,0.029100,0.608200,0.111700],
+[520,0.063270,0.710000,0.078250],[525,0.109600,0.793200,0.057250],
+[530,0.165500,0.862000,0.042160],[535,0.225750,0.914850,0.029840],
+[540,0.290400,0.954000,0.020300],[545,0.359700,0.980300,0.013400],
+[550,0.433450,0.994950,0.008750],[555,0.512050,1.000000,0.005750],
+[560,0.594500,0.995000,0.003900],[565,0.678400,0.978600,0.002750],
+[570,0.762100,0.952000,0.002100],[575,0.842500,0.915400,0.001800],
+[580,0.916300,0.870000,0.001650],[585,0.978600,0.816300,0.001400],
+[590,1.026300,0.757000,0.001100],[595,1.056700,0.694900,0.001000],
+[600,1.062200,0.631000,0.000800],[605,1.045600,0.566800,0.000600],
+[610,1.002600,0.503000,0.000340],[615,0.938400,0.441200,0.000240],
+[620,0.854450,0.381000,0.000190],[625,0.751400,0.321000,0.000100],
+[630,0.642400,0.265000,0.000050],[635,0.541900,0.217000,0.000030],
+[640,0.447900,0.175000,0.000020],[645,0.360800,0.138200,0.000010],
+[650,0.283500,0.107000,0.000000],[655,0.218700,0.081600,0.000000],
+[660,0.164900,0.061000,0.000000],[665,0.121200,0.044580,0.000000],
+[670,0.087400,0.032000,0.000000],[675,0.063600,0.023200,0.000000],
+[680,0.046770,0.017000,0.000000],[685,0.032900,0.011920,0.000000],
+[690,0.022700,0.008210,0.000000],[695,0.015840,0.005723,0.000000],
+[700,0.011359,0.004102,0.000000],[705,0.008111,0.002929,0.000000],
+[710,0.005790,0.002091,0.000000],[715,0.004109,0.001484,0.000000],
+[720,0.002899,0.001047,0.000000],[725,0.002049,0.000740,0.000000],
+[730,0.001440,0.000520,0.000000],[735,0.001000,0.000361,0.000000],
+[740,0.000690,0.000249,0.000000],[745,0.000476,0.000172,0.000000],
+[750,0.000332,0.000120,0.000000],[755,0.000235,0.000085,0.000000],
+[760,0.000166,0.000060,0.000000],[765,0.000117,0.000042,0.000000],
+[770,0.000083,0.000030,0.000000],[775,0.000059,0.000021,0.000000],
+[780,0.000042,0.000015,0.000000]
+];
+
+const locus = cmf.map(([wl,X,Y,Z])=>{
+  const s=X+Y+Z; return {wl,lx:s>0?X/s:0,ly:s>0?Y/s:0};
+});
+const locusPoly = locus.map(p=>[p.lx,p.ly]);
+locusPoly.push([locusPoly[0][0],locusPoly[0][1]]);
+
+function ptInPoly(px,py,poly){
+  let inside=false;
+  for(let i=0,j=poly.length-1;i<poly.length;j=i++){
+    const [xi,yi]=poly[i],[xj,yj]=poly[j];
+    if((yi>py)!==(yj>py)&&px<((xj-xi)*(py-yi)/(yj-yi)+xi)) inside=!inside;
+  }
+  return inside;
+}
+
+function xyz2rgb(X,Y,Z){
+  let r= 3.2406*X-1.5372*Y-0.4986*Z;
+  let g=-0.9689*X+1.8758*Y+0.0415*Z;
+  let b= 0.0557*X-0.2040*Y+1.0570*Z;
+  const gc=v=>v<=0.0031308?12.92*v:1.055*Math.pow(v,1/2.4)-0.055;
+  return [gc(r),gc(g),gc(b)];
+}
+
+function drawBackground(){
+  // fill scanlines inside locus
+  const RES=2;
+  for(let py=0;py<PH;py+=RES){
+    const cy=(1-py/PH)*0.85;
+    for(let px=0;px<PW;px+=RES){
+      const cx2=px/PW*0.85;
+      if(!ptInPoly(cx2,cy,locusPoly)) continue;
+      const Y=1,X=(Y/cy)*cx2,Z=(Y/cy)*(1-cx2-cy);
+      if(Z<0) continue;
+      let [r,g,b]=xyz2rgb(X,Y,Z);
+      const mx=Math.max(r,g,b,0.001);
+      if(mx>1){r/=mx;g/=mx;b/=mx;}
+      r=Math.max(0,Math.min(1,r));
+      g=Math.max(0,Math.min(1,g));
+      b=Math.max(0,Math.min(1,b));
+      cx.fillStyle=`rgb(${r*255|0},${g*255|0},${b*255|0})`;
+      cx.fillRect(PAD.l+px,PAD.t+py,RES,RES);
+    }
+  }
+}
+
+function drawLocus(){
+  cx.beginPath();
+  locus.forEach((p,i)=>{
+    const px=toX(p.lx),py=toY(p.ly);
+    i===0?cx.moveTo(px,py):cx.lineTo(px,py);
+  });
+  cx.closePath();
+  cx.strokeStyle='rgba(220,220,220,0.85)';
+  cx.lineWidth=1.8;
+  cx.stroke();
+}
+
+function drawGrid(){
+  cx.strokeStyle='rgba(255,255,255,0.07)';
+  cx.lineWidth=0.5;
+  for(let v=0;v<=0.85;v=Math.round((v+0.1)*10)/10){
+    cx.beginPath();cx.moveTo(toX(v),PAD.t);cx.lineTo(toX(v),H-PAD.b);cx.stroke();
+    cx.beginPath();cx.moveTo(PAD.l,toY(v));cx.lineTo(W-PAD.r,toY(v));cx.stroke();
+  }
+  cx.strokeStyle='rgba(255,255,255,0.22)';cx.lineWidth=1;
+  cx.beginPath();cx.moveTo(PAD.l,PAD.t);cx.lineTo(PAD.l,H-PAD.b);cx.stroke();
+  cx.beginPath();cx.moveTo(PAD.l,H-PAD.b);cx.lineTo(W-PAD.r,H-PAD.b);cx.stroke();
+}
+
+function drawAxes(){
+  cx.font='12px Segoe UI, Arial';
+  cx.fillStyle='rgba(180,180,180,0.85)';
+  for(let v=0;v<=0.85;v=Math.round((v+0.1)*10)/10){
+    cx.textAlign='center';cx.textBaseline='top';
+    cx.fillText(v.toFixed(1),toX(v),H-PAD.b+8);
+    cx.textAlign='right';cx.textBaseline='middle';
+    cx.fillText(v.toFixed(1),PAD.l-8,toY(v));
+  }
+  cx.fillStyle='rgba(220,220,220,0.9)';cx.font='bold 14px Segoe UI, Arial';
+  cx.textAlign='center';cx.textBaseline='bottom';
+  cx.fillText('x',PAD.l+PW/2,H-2);
+  cx.save();cx.translate(14,PAD.t+PH/2);cx.rotate(-Math.PI/2);
+  cx.textBaseline='middle';cx.fillText('y',0,0);cx.restore();
+}
+
+function drawWavelengthLabels(){
+  const labeled=[460,470,480,490,500,510,520,530,540,550,560,570,580,590,600,610,620,630,640,650,660,680,700];
+  const cxD=0.333,cyD=0.333;
+  cx.font='10.5px Segoe UI, Arial';
+  for(const wl of labeled){
+    const pt=locus.find(p=>p.wl===wl);if(!pt) continue;
+    const px=toX(pt.lx),py=toY(pt.ly);
+    // tick dot
+    cx.beginPath();cx.arc(px,py,2.5,0,Math.PI*2);
+    cx.fillStyle='rgba(255,255,255,0.9)';cx.fill();
+    // offset away from white point
+    const dx=pt.lx-cxD,dy=pt.ly-cyD;
+    const len=Math.sqrt(dx*dx+dy*dy)||1;
+    const ox=(dx/len)*15,oy=-(dy/len)*15;
+    cx.fillStyle='rgba(230,230,230,0.9)';
+    cx.textAlign='center';cx.textBaseline='middle';
+    cx.fillText(wl,px+ox,py+oy);
+  }
+}
+
+function drawWhitePt(lx,ly,label){
+  const px=toX(lx),py=toY(ly);
+  // crosshairs
+  cx.strokeStyle='rgba(255,255,255,0.4)';cx.lineWidth=0.7;cx.setLineDash([4,3]);
+  cx.beginPath();cx.moveTo(PAD.l,py);cx.lineTo(px-9,py);cx.stroke();
+  cx.beginPath();cx.moveTo(px+9,py);cx.lineTo(W-PAD.r,py);cx.stroke();
+  cx.beginPath();cx.moveTo(px,PAD.t);cx.lineTo(px,py-9);cx.stroke();
+  cx.beginPath();cx.moveTo(px,py+9);cx.lineTo(px,H-PAD.b);cx.stroke();
+  cx.setLineDash([]);
+  cx.beginPath();cx.arc(px,py,5,0,Math.PI*2);
+  cx.fillStyle='rgba(255,255,255,0.95)';cx.fill();
+  cx.strokeStyle='#999';cx.lineWidth=1.2;cx.stroke();
+  cx.fillStyle='rgba(220,220,220,0.9)';cx.font='11px Segoe UI, Arial';
+  cx.textAlign='left';cx.textBaseline='bottom';
+  cx.fillText(label,px+9,py-4);
+}
+
+const COLORS=['#ff4d4d','#4d9fff','#4dff91','#ffbf4d','#cc4dff','#ff804d','#4dffed'];
+let userPts=[];
+let colIdx=0;
+
+function drawUserPt(p){
+  const px=toX(p.x),py=toY(p.y);
+  cx.strokeStyle=p.color;cx.lineWidth=0.8;cx.setLineDash([4,3]);cx.globalAlpha=0.6;
+  cx.beginPath();cx.moveTo(PAD.l,py);cx.lineTo(px-9,py);cx.stroke();
+  cx.beginPath();cx.moveTo(px+9,py);cx.lineTo(W-PAD.r,py);cx.stroke();
+  cx.beginPath();cx.moveTo(px,PAD.t);cx.lineTo(px,py-9);cx.stroke();
+  cx.beginPath();cx.moveTo(px,py+9);cx.lineTo(px,H-PAD.b);cx.stroke();
+  cx.setLineDash([]);cx.globalAlpha=1;
+  cx.beginPath();cx.arc(px,py,6,0,Math.PI*2);
+  cx.fillStyle=p.color;cx.fill();
+  cx.strokeStyle='rgba(255,255,255,0.8)';cx.lineWidth=1.5;cx.stroke();
+  const lbl=p.label?`${p.label} (${p.x.toFixed(4)}, ${p.y.toFixed(4)})`:`(${p.x.toFixed(4)}, ${p.y.toFixed(4)})`;
+  cx.fillStyle='rgba(255,255,255,0.95)';cx.font='bold 12px Segoe UI, Arial';
+  cx.textAlign='left';cx.textBaseline='bottom';
+  cx.fillText(lbl,px+10,py-5);
+}
+
+function draw(){
+  cx.clearRect(0,0,W,H);
+  drawBackground();
+  drawGrid();
+  drawLocus();
+  drawAxes();
+  drawWavelengthLabels();
+  drawWhitePt(0.3127,0.3290,'D65');
+  userPts.forEach(drawUserPt);
+}
+
+function addPoint(){
+  const x=parseFloat(document.getElementById('ix').value);
+  const y=parseFloat(document.getElementById('iy').value);
+  const label=document.getElementById('ilabel').value.trim();
+  if(isNaN(x)||isNaN(y)||x<0||y<0||x>0.85||y>0.85){
+    alert('請輸入有效的 x, y 座標（0 到 0.85 之間）');return;
+  }
+  const color=COLORS[colIdx%COLORS.length];colIdx++;
+  userPts.push({x,y,label,color});
+  renderList();draw();
+}
+
+function removePoint(i){
+  userPts.splice(i,1);
+  renderList();draw();
+}
+
+function clearAll(){
+  userPts=[];colIdx=0;
+  renderList();draw();
+}
+
+function renderList(){
+  const el=document.getElementById('plist');
+  if(userPts.length===0){el.innerHTML='<p class="empty-msg">尚無標記點</p>';return;}
+  el.innerHTML=userPts.map((p,i)=>`
+    <div class="point-item">
+      <span class="point-dot" style="background:${p.color}"></span>
+      <div class="point-info">
+        <div class="point-name">${p.label||'點 '+(i+1)}</div>
+        <div class="point-coord">x=${p.x.toFixed(4)}, y=${p.y.toFixed(4)}</div>
+      </div>
+      <button class="point-remove" onclick="removePoint(${i})">×</button>
+    </div>`).join('');
+}
+
+document.addEventListener('keydown',e=>{if(e.key==='Enter')addPoint();});
+draw();
+</script>
+</body>
+</html>
