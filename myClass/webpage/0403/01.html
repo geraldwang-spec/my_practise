@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="" http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+  <link href="css/style.css" rel="stylesheet">
+  <style>
+    /*
+    level:
+      elements    1     re-use
+      class .      10    re-use
+      Id #          100   onces in the html
+      行內式      1000
+      !important  10000
+    */
+
+    h2 {
+      /* color: #ff0000; */
+      color: rgb(0, 255, 0)
+    }
+
+    p {
+      color: red !important;
+    }
+
+    .app {
+      color: green;
+    }
+
+    #app {
+      color: blue !important;
+    }
+
+    #add {
+      color: indigo !important;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>news</h2>
+
+  <p>Consectetur efficitur, cras magna, tempor felis nunc diam convallis lectus molestie ac. Lacus, sagittis donec,
+    pellentesque vestibulum tincidunt proin eget in suscipit gravida justo. Ornare ipsum eleifend dignissim sit, amet
+    sem, molestie felis donec at eu. Elit feugiat massa leo viverra, dolor congue, amet eget habitasse metus ut.
+    Condimentum eu, ante lacus vestibulum, gravida praesent vivamus urna consequat praesent leo. Sit tristique
+    vestibulum et, porttitor curabitur, quisque in nisl auctor bibendum at. Massa, convallis, ultricies faucibus
+    nascetur dapibus eros quis at eget ut ut. Dapibus felis eu, metus, venenatis ultrices massa condimentum metus
+    pretium eget eu. Diam lectus, malesuada eros.</p>
+  <p style="color: chocolate;">
+    Justo turpis tempor, quis sem hac neque, a justo eros amet adipiscing. Faucibus fusce molestie, et convallis laoreet
+    hac, rhoncus auctor nec sed aenean. Consectetur justo penatibus, dapibus, at tempor nisi eget at nibh elit bibendum.
+    Nullam arcu habitasse donec tristique faucibus ullamcorper nisi aliquam, massa dui faucibus. Massa diam nec ut etiam
+    dolor aenean aliquam congue at, tincidunt, tristique. Pellentesque platea, condimentum vulputate platea, turpis
+    vulputate dignissim aliquet eros aliquam lectus. Ac, praesent dictum porttitor lacus platea nunc, semper nullam diam
+    metus elit. Eu, vel rhoncus in, amet vivamus ligula lectus condimentum viverra suscipit rhoncus. Gravida platea
+    ipsum nibh.
+  </p>
+
+  <p>1. ABCD</p>
+  <p class="app">2. ABCD</p>
+  <p class="app" , id="app" style="color: yellow;">3. ABCD</p>
+  <p style="color: yellow;">4. ABCD</p> <!--行內式-->
+
+
+</body>
+
+</html>
