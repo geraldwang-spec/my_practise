@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+  <link href="static/video_style/css/camera.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="media-wrapper">
+    <div class="container">
+      <video id="video" width="640" height="480" autoplay playsinline></video>
+      <div class="reticle"></div>
+    </div>
+    <div class="container">
+      <video id="video" width="640" height="480" autoplay playsinline></video>
+      <div class="reticle"></div>
+    </div>
+  </div>
+
+  <div class="container1">
+    <div class="info-panel">
+      <strong>中心點 RGB 數值：</strong>
+      <div id="rgb-text">R: - , G: - , B: -</div>
+      <div id="color-box" class="color-preview"></div>
+      <p><small>提示：請確保環境光穩定以利後續 CIE 轉換</small></p>
+    </div>
+    <div class="info-panel">
+      <strong>白平衡模式</strong>
+      <div class="switch-wrapper">
+        <span>自動</span>
+        <label class="slide-switch">
+          <input type="checkbox" id="wb-logic-switch">
+          <span class="slider"></span>
+        </label>
+        <span>手動</span>
+      </div>
+
+      <div id="manual-settings" style="display: none; margin-top: 15px;">
+        <label>色溫調整: <span id="temp-display">4500</span>K</label>
+        <input type="range" id="wb-slider" min="2000" max="8000" step="100" value="4500" style="width: 100%;">
+      </div>
+    </div>
+  </div>
+
+  <canvas id="helper-canvas" width="640" height="480" style="display:none;"></canvas>
+  <h1>QOO</h1>
+  <script src="static/video_style/jsfile/camera.js">
+
+  </script>
+</body>
+
+</html>

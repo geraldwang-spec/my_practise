@@ -1,0 +1,134 @@
+body {
+  font-family: sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* background: #f0f0f0; */
+  background: #202020;
+}
+
+.container {
+  position: relative;
+  margin-top: 20px;
+}
+
+.media-wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 10px;
+}
+
+#video {
+  border: 2px solid #333;
+  border-radius: 8px;
+  background: #000;
+}
+
+/* 瞄準點 */
+.reticle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  border: 2px solid white;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+
+.info-panel {
+  margin-top: 20px;
+  padding: 15px;
+  /* background: white; */
+  background: gray;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.color-preview {
+  width: 50px;
+  height: 50px;
+  border: 1px solid #ccc;
+  margin: 10px 0;
+  border-radius: 4px;
+}
+
+.container1 {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+/* 容器設定 */
+.switch-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+/* 滑動開關外框 */
+.slide-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 22px;
+}
+
+/* 隱藏原始 checkbox */
+.slide-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* 滑道 */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .3s;
+  border-radius: 22px;
+}
+
+/* 圓鈕 */
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+}
+
+/* 當被勾選 (Manual) 時的顏色 */
+input:checked+.slider {
+  background-color: #4CAF50;
+  /* 成功綠，也可改用您的品牌色 */
+}
+
+/* 圓鈕滑動位移 */
+input:checked+.slider:before {
+  transform: translateX(22px);
+}
+
+@media (max-width: 1300px) {
+  .media-wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+}
