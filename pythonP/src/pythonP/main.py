@@ -35,6 +35,7 @@ def practise():
     class_practise_test()
 
 if __name__ == '__main__':
+    print(f"param = {sys.argv[0]}")
     if len(sys.argv) < 2:
         practise()
     else:
