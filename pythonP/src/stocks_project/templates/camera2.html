@@ -5,7 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title></title>
-  <link href="static/video_style/css/camera.css" rel="stylesheet">
+  <link href="/static/video_style/css/main.css" rel="stylesheet">
+  <!-- <link href="static/video_style/css/cie.css" rel="stylesheet"> -->
 </head>
 
 <body>
@@ -14,9 +15,8 @@
       <video id="video" width="640" height="480" autoplay playsinline></video>
       <div class="reticle"></div>
     </div>
-    <div class="container">
-      <video id="video" width="640" height="480" autoplay playsinline></video>
-      <div class="reticle"></div>
+    <div class="cie__container">
+      <p class="cie__subtitle">CIE 1931 Chromaticity Diagram — xy 色度座標系統</p>
     </div>
   </div>
 
@@ -46,7 +46,6 @@
   </div>
 
   <canvas id="helper-canvas" width="640" height="480" style="display:none;"></canvas>
-  <h1>QOO</h1>
   <script src="static/video_style/jsfile/camera.js">
 
   </script>

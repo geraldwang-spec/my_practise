@@ -1,0 +1,15 @@
+.cie__subtitle {
+  font-size: 13px;
+  color: #f0f0f0;
+  margin-bottom: 20px;
+}
+
+.cie__container {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  /* width: 100%; */
+  /* max-width: 100%; */
+}
