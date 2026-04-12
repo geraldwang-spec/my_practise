@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+  <link href="css/style.css" rel="stylesheet">
+</head>
+
+<body>
+
+</body>
+
+</html>
+
+<script>
+  // 特性             |  ar                           | let                       
+  // 作用域           | 函式作用域(Function Scope)    | 區塊作用域(Block Scope)
+  // 重複宣告         | 允許（會直接覆蓋）            | 不允許（會報錯） 
+  // 提升(Hoisting)   | 會（初始化為 undefined）      | 會（但處於 TDZ，不可存取）
+  // 全域對象(window) | 會掛載到 window 物件上        | 不會
+  var a = 10;
+  var b = 5;
+  var x = 10;
+  var y = "10"
+  var i = 10;
+  var j = 5;
+  console.log(a + b);
+  console.log(a - b);
+  console.log(a * b);
+  console.log(a / b);
+  console.log(a % b);
+  console.log(a & b);
+  console.log(a | b);
+  console.log(++a);
+  console.log(a++);
+  console.log(b--);
+  console.log(--b);
+  console.log(a ** 2);
+  console.log(a = b);
+  console.log(a == b);
+  console.log(a === b);
+  console.log(x);
+  console.log(y);
+  console.log(typeof (x));
+  console.log(typeof (y));
+  console.log(x == y);
+  console.log(x === y); //檢查值及型別是否相同
+  console.log(x && y);
+  console.log(x || y);
+  console.log(i && j);
+  console.log(i || j);
+</script>

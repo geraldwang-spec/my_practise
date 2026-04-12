@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+  <link href="css/style.css" rel="stylesheet">
+</head>
+
+<body>
+  <button id="btn" type="button">CLICK</button>
+  <h2 id="user"></h2>
+</body>
+
+</html>
+
+<script>
+  let nameF = ["趙", "錢", "孫", "李", "周", "吳", "冷", "王", "馮", "陳"];
+  let nameT = ["依林", "杰倫", "aab", "bb", "cc", "dd", "ee", "ff", "hh", "kk"];
+  let user = document.getElementById("user");
+  let btn = document.getElementById("btn");
+  btn.addEventListener("click", function () {
+    let x = Math.floor(Math.random() * 10);
+    let y = Math.floor(Math.random() * 10);
+    user.textContent = nameF[x] + nameT[y];
+  });
+</script>
