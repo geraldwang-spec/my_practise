@@ -1,6 +1,7 @@
 @import url("reset.css");
 @import url("camera.css");
 @import url("cie.css");
+@import url(side-menu.css);
 
 body {
   font-family: 'Segoe UI', Arial, sans-serif;
@@ -9,8 +10,23 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  /* align-items: center; */
   padding: 24px 16px;
+}
+
+.my-portfolio-nav {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  left: 0px;
+}
+
+.nav-style {
+  background: yellowgreen;
+}
+
+.justify-between {
+  justify-content: space-between;
 }
 
 .main_container {

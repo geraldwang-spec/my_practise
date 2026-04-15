@@ -59,6 +59,10 @@ def create_app()->Flask:
     def camera2()->str:
         return render_template(template_name_or_list='camera2.html')
 
+    @app.route(rule='/html_ex')
+    def html_ex()->str:
+        return render_template(template_name_or_list='html_ex.html')
+
     return app
 
 if __name__ == "__main__":

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+  <link href="/static/practise_folder/sidemenu.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Pacifico&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
+  <script src="https://kit.fontawesome.com/9427a040dc.js" crossorigin="anonymous"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-family: "Noto Sans", sans-serif;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      background-color: #546377;
+    }
+
+    .side-menu {
+      width: 300px;
+      height: 100%;
+      padding: 50px 0px;
+      box-sizing: border-box;
+      background-image: linear-gradient(29deg, rgba(42, 123, 155, 1) 0%, rgba(159, 63, 92, 1) 24%, rgba(87, 199, 133, 1) 50%, rgba(210, 146, 109, 1) 74%, rgba(237, 221, 83, 1) 100%);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .side-menu form {
+      display: flex;
+      margin: 0px 10px;
+    }
+
+    .side-menu form input {
+      border: none;
+      padding: 5px 10px;
+      width: 230px;
+    }
+
+    .side-menu form button {
+      border: none;
+      padding: 5px 10px;
+      width: 50px;
+    }
+
+    nav a {
+      display: block;
+      padding: 10px;
+      color: #fff;
+      text-decoration: none;
+      position: relative;
+    }
+
+    nav a+a::before {
+      position: absolute;
+      content: "";
+      border-top: 1px solid #fff;
+      left: 10px;
+      right: 10px;
+      top: 0px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="side-menu">
+    <form>
+      <input type="search" name="" value="">
+      <button type="button">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+    </form>
+    <nav>
+      <a href="#"><i class="fa-solid fa-house"></i> test01</a>
+      <a href="#"><i class="fa-solid fa-dumbbell"></i> test01</a>
+      <a href="#"><i class="fa-solid fa-dumbbell"></i> test01</a>
+      <a href="#"><i class="fa-regular fa-face-grin-tears"></i> test01</a>
+      <a href="#"><i class="fa-solid fa-bed"></i> test01</a>
+    </nav>
+  </div>
+</body>
+
+</html>
