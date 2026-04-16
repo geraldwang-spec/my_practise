@@ -37,23 +37,72 @@
       background-image: linear-gradient(29deg, rgba(42, 123, 155, 1) 0%, rgba(159, 63, 92, 1) 24%, rgba(87, 199, 133, 1) 50%, rgba(210, 146, 109, 1) 74%, rgba(237, 221, 83, 1) 100%);
       display: flex;
       flex-direction: column;
+      box-shadow: 10px 0px 10px hsla(240, 40%, 10%, 0.6);
     }
+
+    // .side-menu form {
+    //   display: flex;
+    //   margin: 0px 10px 50px;
+    //   border-radius: 100px;
+    //   border: 1px solid #fff;
+    // }
+
+    // .side-menu form input {
+    //   border: none;
+    //   background-color: transparent;
+    //   padding: 5px 10px;
+    //   width: 230px;
+    //   color: #fff;
+    // }
+
+    // .side-menu form button {
+    //   border: none;
+    //   background-color: transparent;
+    //   padding: 5px 10px;
+    //   width: 50px;
+    //   color: #fff;
+    // }
+
 
     .side-menu form {
       display: flex;
-      margin: 0px 10px;
+      margin: 0px 10px 50px;
+      border-radius: 100px;
+      border: 1px solid #fff;
+    }
+
+    .side-menu form input,
+    .side-menu form button {
+      border: none;
+      background-color: transparent;
+      padding: 5px 10px;
+      color: #fff;
     }
 
     .side-menu form input {
-      border: none;
-      padding: 5px 10px;
       width: 230px;
     }
 
     .side-menu form button {
-      border: none;
-      padding: 5px 10px;
       width: 50px;
+    }
+
+    .side-menu form input:focus {
+      outline: none;
+    }
+
+    .side-menu form:focus-within {
+      border: 1px solid #ffcc00;
+      box-shadow: 0px 0px 10px gray;
+      border-radius: 100px;
+    }
+
+    .side-menu form:hover {
+      border: 3px solid #0ff;
+    }
+
+    .side-menu form input::placeholder {
+      color: #fff;
     }
 
     nav a {
@@ -72,23 +121,27 @@
       right: 10px;
       top: 0px;
     }
+
+    nav a .fa {
+      margin-right: -1.1em;
+    }
   </style>
 </head>
 
 <body>
   <div class="side-menu">
     <form>
-      <input type="search" name="" value="">
+      <input type="search" placeholder="請輸入關鍵字">
       <button type="button">
         <i class="fa-solid fa-magnifying-glass"></i>
       </button>
     </form>
     <nav>
-      <a href="#"><i class="fa-solid fa-house"></i> test01</a>
-      <a href="#"><i class="fa-solid fa-dumbbell"></i> test01</a>
-      <a href="#"><i class="fa-solid fa-dumbbell"></i> test01</a>
-      <a href="#"><i class="fa-regular fa-face-grin-tears"></i> test01</a>
-      <a href="#"><i class="fa-solid fa-bed"></i> test01</a>
+      <a href="#"><i class="fa fa-solid fa-house"></i> test01</a>
+      <a href="#"><i class="fa fa-solid fa-dumbbell"></i> test01</a>
+      <a href="#"><i class="fa fa-solid fa-dumbbell"></i> test01</a>
+      <a href="#"><i class="fa fa-regular fa-face-grin-tears"></i> test01</a>
+      <a href="#"><i class="fa fa-solid fa-bed"></i> test01</a>
     </nav>
   </div>
 </body>
