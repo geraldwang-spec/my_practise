@@ -68,7 +68,7 @@
       display: flex;
       margin: 0px 10px 50px;
       border-radius: 100px;
-      border: 1px solid #fff;
+      border: 1px solid rgb(255, 255, 255, 0.4);
     }
 
     .side-menu form input,
@@ -98,7 +98,8 @@
     }
 
     .side-menu form:hover {
-      border: 3px solid #0ff;
+      box-shadow: 0px 0px 10px gray;
+      border-radius: 100px;
     }
 
     .side-menu form input::placeholder {
@@ -116,7 +117,8 @@
     nav a+a::before {
       position: absolute;
       content: "";
-      border-top: 1px solid #fff;
+      border-top: 1px solid rgb(255, 255, 255, 0.4);
+      ;
       left: 10px;
       right: 10px;
       top: 0px;
@@ -124,6 +126,14 @@
 
     nav a .fa {
       margin-right: -1.1em;
+      transform: scale(0);
+      transition: 0.3s;
+    }
+
+    nav a:hover .fa {
+      margin-right: 0em;
+      transform: scale(1);
+      transition: 0.3s;
     }
   </style>
 </head>
