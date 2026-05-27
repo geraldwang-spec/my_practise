@@ -30,6 +30,7 @@
     }
 
     .side-menu {
+      position: relative;
       width: 300px;
       height: 100%;
       padding: 50px 0px;
@@ -38,6 +39,8 @@
       display: flex;
       flex-direction: column;
       box-shadow: 10px 0px 10px hsla(240, 40%, 10%, 0.6);
+      transform: translateX(-100%);
+      transition: 0.3s;
     }
 
     // .side-menu form {
@@ -106,6 +109,36 @@
       color: #fff;
     }
 
+    .side-menu label {
+      position: absolute;
+      width: 40px;
+      height: 80px;
+      background-color: #000;
+      color: #fff;
+      top: 0;
+      bottom: 0;
+      margin: auto;
+      right: -40px;
+      line-height: 80px;
+      text-align: center;
+      font-size: 30px;
+      border-radius: 0 10px 10px 0;
+    }
+
+    #side-menu-switch {
+      position: absolute;
+      opacity: 0;
+      z-index: -1;
+    }
+
+    #side-menu-switch:checked+.side-menu {
+      transform: translateX(0);
+    }
+
+    #side-menu-switch:checked+.side-menu label .fa-solid {
+      transform: scaleX(-1);
+    }
+
     nav a {
       display: block;
       padding: 10px;
@@ -135,10 +168,13 @@
       transform: scale(1);
       transition: 0.3s;
     }
+
+    //#side-menu-switch {}
   </style>
 </head>
 
 <body>
+  <input type="checkbox" name="" id="side-menu-switch">
   <div class="side-menu">
     <form>
       <input type="search" placeholder="請輸入關鍵字">
@@ -153,6 +189,9 @@
       <a href="#"><i class="fa fa-regular fa-face-grin-tears"></i> test01</a>
       <a href="#"><i class="fa fa-solid fa-bed"></i> test01</a>
     </nav>
+    <label for="side-menu-switch">
+      <i class="fa-solid fa-angle-right"></i>
+    </label>
   </div>
 </body>
 
