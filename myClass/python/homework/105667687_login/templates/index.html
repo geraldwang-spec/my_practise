@@ -5,7 +5,7 @@
 
   <meta charset="UTF-8">
 
-  <title>CodePen - Game Form</title>
+  <title>CodePen - Random Login Form</title>
 
   <style>
     @import url(http://fonts.googleapis.com/css?family=Exo:100,200,400);
@@ -47,35 +47,6 @@
       /* Chrome,Safari4+ */
       z-index: 1;
       opacity: 0.7;
-    }
-
-    .container {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
-      z-index: 10;
-      width: 100%;
-      max-width: 1000px;
-    }
-
-    .choice-group {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      margin: 10px 0;
-    }
-
-    .choice-group a img {
-      width: 200px;
-      height: auto;
-      translate: transform 0.2s;
-    }
-
-    .choice-group a img:hover {
-      transform: scale(1.1);
     }
 
     .header {
@@ -178,38 +149,6 @@
     ::-moz-input-placeholder {
       color: rgba(255, 255, 255, 0.6);
     }
-
-    .result-box {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      gap: 40px;
-      z-index: 10;
-      margin-top: 20px;
-      padding: 15px;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 8px;
-    }
-
-    .result-box p {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      font-size: 18px;
-      font-family: 'Exo', sans-serif;
-      margin: 0;
-    }
-
-    .result-box p span {
-      margin-bottom: 15px;
-      font-weight: 400;
-    }
-
-    .result-box img {
-      width: 200px;
-      height: auto;
-      display: block;
-    }
   </style>
 
   <script src="static/js/prefixfree.min.js"></script>
@@ -220,53 +159,21 @@
 
   <div class="body"></div>
   <div class="grad"></div>
-  <div class="container">
-    <h1>使用者: {{ user }}</h1>
-    <div class="choice-group">
-      <a href="/game?choice=paper" name="paper">
-        <img src="static/paper.png" alt="">
-      </a>
-      <a href="/game?choice=scissors" name="scissors">
-        <img src="static/scissors.png" alt="">
-      </a>
-      <a href="/game?choice=stone" name="stone">
-        <img src="static/stone.png" alt="">
-      </a>
-
-    </div>
-    <h2>遊戲結果</h2>
-    <div class="result-box">
-      {% if user_choice %}
-      <p>
-        <span>你的選譯</span>
-        {% if user_choice == 'paper' %}
-        <img src="static/paper.png" alt="">
-        {% elif user_choice == 'scissors' %}
-        <img src="static/scissors.png" alt="">
-        {% else %}
-        <img src="static/stone.png" alt="">
-        {% endif %}
-      </p>
-
-      <p>
-        <span>電腦選擇</span>
-        {% if computer_choice == 'paper' %}
-        <img src="static/paper.png" alt="">
-        {% elif computer_choice == 'scissors' %}
-        <img src="static/scissors.png" alt="">
-        {% else %}
-        <img src="static/stone.png" alt="">
-        {% endif %}
-      </p>
-      {% endif %}
-
-    </div>
-    <h2>{{ result }}</h2>
-    <h2>{{ pass_count }}</h2>
-
+  <div class="header">
+    <div>Site<span>Random</span></div>
   </div>
-
-
+  <br>
+  <div class="login">
+    <form action="/" method="post">
+      <input type="text" placeholder="username" name="username"><br>
+      <input type="password" placeholder="password" name="passwd"><br>
+      <!-- <input type="button" value="Login"> -->
+      <input type="submit" name="" value="Login">
+    </form>
+    <hr>
+    <p>No Account? <a href="/register">Click here</a></p>
+    <p>{{ error_message }}</p>
+  </div>
 
   <script src='http://codepen.io/assets/libs/fullpage/jquery.js'></script>
 

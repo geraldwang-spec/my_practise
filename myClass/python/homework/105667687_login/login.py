@@ -5,15 +5,24 @@ app = Flask(__name__)
 app.secret_key = "gerald_QOO_string_key"
 
 class UserData:
+
     def __init__(self, account, hashed_passwd, email, name) -> None:
         self.hashed_passwd = hashed_passwd
         self.account = account
         self.email = email
         self.name = name
+        self.__pass_count:int = 0
+
+    def set_pass_count(self):
+        self.__pass_count += 1
+
+    def get_pass_count(self):
+        return self.__pass_count
+    
 
 userDatas = []
 
-@app.route('/', methods = ['POST', 'GET'])
+@app.route('/', methods=['POST', 'GET'])
 def login():
     if request.method == "GET":
         saved_account = request.cookies.get("registered_user", '')
@@ -24,8 +33,8 @@ def login():
         input_passwd = request.form.get("passwd")
 
         target_user=None
+        print(f"before check {input_username}, {input_passwd}")
         for user in userDatas:
-            print("test")
             if user.account == input_username:
                 target_user = user
                 print(f"{user.account},{user.hashed_passwd},{user.email}, {user.name}")
@@ -63,6 +72,15 @@ def game():
     user_choice = request.args.get("choice")
     computer_choice = None
     result = None
+        
+    userData  = None
+    print(current_user)
+    print(len(userDatas))
+    for user in userDatas:
+        if current_user == user.account:
+            userData = user
+
+    print(f"{userData.account}, {userData.hashed_passwd}, {userData.email}, {userData.name}")
 
     print(user_choice)
     if user_choice:
@@ -74,6 +92,7 @@ def game():
                  (user_choice == 'scissors' and computer_choice == 'paper') or \
                  (user_choice == 'paper' and computer_choice == 'stone'):
             result = "你贏了！🎉"
+            userData.set_pass_count()
         else:
             result = "你輸了...😢"
 
@@ -81,8 +100,9 @@ def game():
                            user=current_user, 
                            user_choice=user_choice, 
                            computer_choice=computer_choice, 
-                           result=result)
+                           result=result,
+                           pass_count = f"你贏了 {userData.get_pass_count()}次")
 
 if __name__ == '__main__':
-    app.run(debug = True)
+    app.run(debug = True, port=5000)
     
