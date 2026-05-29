@@ -33,17 +33,21 @@ def login():
         input_passwd = request.form.get("passwd")
 
         target_user=None
-        print(f"before check {input_username}, {input_passwd}")
         for user in userDatas:
             if user.account == input_username:
                 target_user = user
                 print(f"{user.account},{user.hashed_passwd},{user.email}, {user.name}")
                 break
-        if target_user and target_user.hashed_passwd == input_passwd:
-            session["user"] = target_user.account
-            return redirect(url_for("game"))
-        else:
+
+        if target_user is None:
             return render_template('index.html', error_message="user name or password fail")
+
+        if target_user.hashed_passwd != input_passwd:
+            return render_template('index.html', 
+                                   error_message="user name or password fail",
+                                  user = target_user.account )
+        session["user"] = target_user.account
+        return redirect(url_for("game"))
         
 @app.route('/register', methods = ['POST','GET'])
 def register():
@@ -102,6 +106,11 @@ def game():
                            computer_choice=computer_choice, 
                            result=result,
                            pass_count = f"你贏了 {userData.get_pass_count()}次")
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("login"))
 
 if __name__ == '__main__':
     app.run(debug = True, port=5000)
