@@ -1,3 +1,4 @@
+from queue import Empty
 from flask import Flask, make_response, redirect, url_for, request, render_template, session
 import random
 
@@ -6,7 +7,7 @@ app.secret_key = "gerald_QOO_string_key"
 
 class UserData:
 
-    def __init__(self, account, hashed_passwd, email, name) -> None:
+    def __init__(self, account:str, hashed_passwd:str, email:str, name:str) -> None:
         self.hashed_passwd = hashed_passwd
         self.account = account
         self.email = email
@@ -25,10 +26,11 @@ userDatas = []
 @app.route('/', methods=['POST', 'GET'])
 def login():
     if request.method == "GET":
+        print("ddd")
         saved_account = request.cookies.get("registered_user", '')
-        current_user = session.get("user")
-        if current_user is not None:
-            return render_template(url_for("game"))
+        current_user = session.get("user", "")
+        if len(current_user) != 0:
+            return render_template("game.html", user = current_user)
         return render_template('index.html', user = current_user)
     else:
         input_username = request.form.get("username")
@@ -77,7 +79,7 @@ def game():
 
     user_choice = request.args.get("choice")
     computer_choice = None
-    result = None
+    result = ""
         
     userData  = None
     print(current_user)
