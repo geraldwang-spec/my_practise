@@ -27,7 +27,9 @@ def login():
     if request.method == "GET":
         saved_account = request.cookies.get("registered_user", '')
         current_user = session.get("user")
-        return render_template('index.html')
+        if current_user is not None:
+            return render_template(url_for("game"))
+        return render_template('index.html', user = current_user)
     else:
         input_username = request.form.get("username")
         input_passwd = request.form.get("passwd")
@@ -88,7 +90,7 @@ def game():
 
     print(user_choice)
     if user_choice:
-        choices = ["paper", "scissors", "paper"]
+        choices = ["paper", "scissors", "tone"]
         computer_choice = choices[ random.randint(0, 2)]
         if user_choice == computer_choice:
                 result = "平手！"
