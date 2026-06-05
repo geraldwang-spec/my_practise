@@ -19,4 +19,6 @@ class UserData:
     def get_pass_count(self):
         return self.__pass_count
 
-    
+    def general_sql_string(self):
+
+

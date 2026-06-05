@@ -1,73 +1,31 @@
+from datetime import datetime, timedelta, timezone
 import sqlite3
 from pathlib import Path
+from sqlalchemy import Integer, String, create_engine
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy.sql.functions import now
 
-class SqliteProcess:
-    def __init__(self, db = "login.db") -> None:
-        self.db = db
-        self.connected = self.__init_sql_database(db)
+class Base(DeclarativeBase):
+    pass
 
-    def __init_sql_database(self, db):
-        b = True
-        if Path("login.db").is_file():
-            return b
-        con = sqlite3.connect(db)
-        try:
-            with con as con:
-                cur = con.cursor()
-                cur.execute("""
-               CREATE TABLE "login" (
-                        	"id"	INTEGER,
-                        	"username"	TEXT NOT NULL UNIQUE,
-                        	"passwd"	TEXT NOT NULL,
-                        	"email"	TEXT NOT NULL UNIQUE,
-                        	"name"	TEXT NOT NULL UNIQUE,
-                        	"mail_ready"	INTEGER NOT NULL,
-                        	"mail_number"	INTEGER NOT NULL,
-                        	"account_created"	TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                        	"mail_check_time"	TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                        	PRIMARY KEY("id" AUTOINCREMENT)
-                        ); 
-                """)
-                print("create db")
-        except sqlite3.Error as e:
-            print(f"login.db init fail: {e}")
-            b = False
-        finally:
-            print("db init finish")
-            con.close()
-        
-        return b
+class UserModule(Base):
+    __tablename__:str = "login"
+    id:Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    username:Mapped[str] = mapped_column(String, unique=True, nullable=False)
+    passwd:Mapped[str] = mapped_column(String, nullable=False)
+    mail: Mapped[str] = mapped_column(String, unique=True, nullable=False)
+    name: Mapped[str] = mapped_column(String, unique=True, nullable=False)
+    mail_ready: Mapped[bool] = mapped_column(Integer, nullable=False, default=False)
+    account_created:Mapped[datetime] = mapped_column(
+        nullable= False, 
+        default=lambda: datetime.now(timezone.utc))
+    mail_check_time:Mapped[datetime] = mapped_column(
+        unique=False,
+        default=lambda: datetime.now(tz=timezone.utc).replace(microsecond=0)+timedelta(minutes=15)
+    ) 
 
-    def get_login_data(self):
-        rows = []
-        con = sqlite3.connect(self.db)
-        try:
-            with con:
-                cur = con.cursor()
-                _ = cur.execute("""
-                                select 
-                                username, 
-                                passwd, 
-                                email, 
-                                name, 
-                                mail_ready,
-                                mail_number,
-                                account_created,
-                                mail_check_time,
-                                from login
-                                """)
-                rows = cur.fetchall()
-        except sqlite3.Error as e:
-            print(f"get db data fail: {e}")
-            rows = []
-        finally:
-            con.close()
-
-        return rows
-                
-
-
-
-
+class DatabaseManager:
+    def __init__(self, db_url:str = "sqlite:///login.db") -> None:
+        self._engine = create_engine(db_url, echo=False)
     
 

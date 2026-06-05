@@ -1,16 +1,39 @@
-from datetime import timedelta
+from asyncio.windows_events import NULL
+from datetime import datetime, timezone, timedelta
 import os
 import random
-from sqliteProcess import SqliteProcess as sql
-from UserDataModule import UserData as user
+from flask import Flask
+from flask.cli import load_dotenv
+from sqlalchemy import null
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqliteProcess import DatabaseManager
+from UserDataModule import UserData as user
+from mailprocess import MailProcess as mailp
 
 class LoginController:
     users: list[user] = []
+    app: Flask
+    __mailproc: mailp
+    __db_m:DatabaseManager
 
-    def __init__(self) -> None:
-        self.sql: sql = sql()
-        self.get_db_users()
+    def __init__(self, _app:Flask) -> None:
+        self.app = _app
+        # self.sql: sql = sql()
+        # self.get_db_users()
+
+    def init_core(self)->None:
+        _ = load_dotenv()
+        self.app.secret_key = os.environ.get("SECRET_KEY")
+        self.app.config.update(
+            MAIL_SERVER='smtp.gmail.com',
+            MAIL_PORT=465,
+            MAIL_USE_TLS=False,
+            MAIL_USE_SSL=True,
+            MAIL_USERNAME=os.environ.get("MAIL_USERNAME"),
+            MAIL_PASSWORD=os.environ.get("MAIL_PASSWORD")
+        )
+        self.__mailproc = mailp(self.app)
+        self.__db_m = DatabaseManager()
 
     def get_db_users(self):
         rows = self.sql.get_login_data()
@@ -38,8 +61,9 @@ class LoginController:
         return ["game.html", "", target_user.username]
 
     def user_register(self, username, passwd, email, name, front_time):
+        print(front_time)
         regD = []
-        dt_utc =datetime.fromtimestamp(front_time, timezone.utc) 
+        dt_utc =datetime.fromtimestamp(float(front_time), timezone.utc) 
         regD.append(username)
         regD.append(generate_password_hash(passwd))
         regD.append(email)
@@ -49,13 +73,7 @@ class LoginController:
         regD.append(dt_utc)
         dt_utc_15 = dt_utc +timedelta(minutes=15)
         regD.append(dt_utc_15)
-        userd = user(regD)
-        userDatas.append(userd)
-        # resp = make_response(redirect(url_for("login")))
-        # resp.set_cookie("registered_user", username, max_age=600)
-        # return resp
-        # start_mail_thread(user=userd)
-
-
+        # self.users.append(user(regD))
+        print(dt_utc) 
         
 
