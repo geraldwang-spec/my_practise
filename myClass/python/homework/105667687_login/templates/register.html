@@ -164,25 +164,26 @@
   </div>
   <br>
   <div class="login">
-    <form action="/register" method="post" onsubmit="captureTime()">
+    <form action="/register" method="post">
       <input type="text" placeholder="username" name="username"><br>
       <input type="text" placeholder="password" name="passwd"><br>
       <input type="text" placeholder="email" name="email"><br>
       <input type="text" placeholder="name" name="name"><br>
       <!-- <input type="button" value="Login"> -->
-      <input type="hidden" id="client_timestamp" name="client_timestamp" value="">
+      <!-- <input type="hidden" id="client_timestamp" name="client_timestamp" value=""> -->
       <input type="submit" name="" value="Register">
+      <p> {{ error_message }}</p>
 
     </form>
   </div>
 
   <script src='http://codepen.io/assets/libs/fullpage/jquery.js'></script>
-  <script>
-    function captureTime() {
-      const timestampInSeconds = Math.floor(Date.now() / 1000);
-      document.getElementById('client_timestamp').value = timestampInSeconds;
-    }
-  </script>
+  <!-- <script> -->
+  <!--   function captureTime() { -->
+  <!--     const timestampInSeconds = Math.floor(Date.now() / 1000); -->
+  <!--     document.getElementById('client_timestamp').value = timestampInSeconds; -->
+  <!--   } -->
+  <!-- </script> -->
 
 </body>
 

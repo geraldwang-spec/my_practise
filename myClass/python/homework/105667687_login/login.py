@@ -21,10 +21,10 @@ mail = Mail(app)
 class UserData:
 
     def __init__(self, account:str, hashed_passwd:str, email:str, name:str) -> None:
-        self.hashed_passwd = hashed_passwd
-        self.account = account
-        self.email = email
-        self.name = name
+        self.hashed_passwd:str = hashed_passwd
+        self.account:str= account
+        self.email:str = email
+        self.name:str = name
         self.__pass_count:int = 0
         self.__mail_check:bool = False
         self.__mail_check_number:int = 0

@@ -1,16 +1,12 @@
-from datetime import datetime
+from sqlalchemy import select
+from sqlalchemy.exc import SQLAlchemyError
+from sqliteProcess import DatabaseManager, UserModule
 
 class UserData:
-
-    def __init__(self, user_data) -> None:
-        self.username = user_data[0]
-        self.passwd = user_data[1]
-        self.email = user_data[2]
-        self.name = user_data[3]
-        self.mail_ready = bool(user_data[4])
-        self.mail_number = int(user_data[5])
-        self.account_created = datetime.strptime(user_data[6], "%Y-%m-%d %H:%M:%S%z")
-        self.mail_check_time = datetime.strptime(user_data[7], "%Y-%m-%d %H:%M:%S%z")
+    _db_m:DatabaseManager
+    __pass_count:int
+    def __init__(self, db_manager:DatabaseManager ) -> None:
+        self._db_m = db_manager
         self.__pass_count:int = 0
 
     def set_pass_count(self):
@@ -19,6 +15,49 @@ class UserData:
     def get_pass_count(self):
         return self.__pass_count
 
-    def general_sql_string(self):
+    # datebase process
+    def create_user(self, user_data: UserModule)->bool:
+        with self._db_m.get_session() as session:
+            try:
+                session.add(user_data)
+                session.commit()
+                return True
+            except SQLAlchemyError as e:
+                session.rollback()
+                print(f"create user db failed: {e}")
+                return False
+
+    def get_user_by_username(self, username:str) -> UserModule | None:
+        with self._db_m.get_session() as session:
+            try:
+                stmt = select(UserModule).where(UserModule.username == username)
+                user = session.scalars(stmt).first()
+                if user:
+                    session.expunge(user)
+                return user
+            except SQLAlchemyError as e:
+                session.rollback()
+                print(f"get user db failed: {e}")
+                return None
+
+    def update_mail_ready(self, username:str, ready:bool) ->bool:
+        with self._db_m.get_session() as session:
+            try:
+                stmt = select(UserModule).where(UserModule.username == username)
+                user = session.scalars(stmt).first()
+                if not user:
+                    print(f"can't find user = {username}")
+                    return False
+
+                user.mail_ready = ready
+                session.commit()
+                return True
+            except SQLAlchemyError as e:
+                session.rollback()
+                print(f"Update mail ready db failed: {e}")
+                return False
+
+
+
 
 
