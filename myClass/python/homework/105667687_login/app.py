@@ -1,4 +1,3 @@
-from unittest import result
 from flask import Flask, Response, make_response, redirect, url_for, request, render_template, session
 from login_controller import AuthStatus, LoginController as loginC, LoginResponse
 from sqliteProcess import GameModule
@@ -22,24 +21,12 @@ def create_app()->Flask:
             res:LoginResponse = loginCore.check_user_status(
                 username=user_name,
                 passwd=pass_wd)
-        
-        if res.status == AuthStatus.USER_NOT_FOUND or \
-            res.status == AuthStatus.MAIL_NOT_VERIFIED:
+
+        if res.status != AuthStatus.SUCCESS:
             return render_template(
                     template_name_or_list="index.html",
-                    error_message = res.error_message)
-        
-        if res.status == AuthStatus.PASSWORD_ERROR:
-            res_user:GameModule|None = res.extra_data
-            if res_user is None:
-                return render_template(
-                template_name_or_list="index.html",
-                error_message="extra_data failed"
-            )
-            return render_template(
-                template_name_or_list= "index.html", 
                     error_message = res.error_message,
-                    user = res_user.user_name)
+                    user = user_name)
         
         resp:Response = make_response(redirect(location=url_for(endpoint="game")))
         resp.set_cookie(key="registered_user", value=user_name, max_age=600)
@@ -67,24 +54,26 @@ def create_app()->Flask:
     
     @app.route('/game', methods = ['POST', 'GET'])
     def game():
-        current_user = session.get('user', "") 
-        if current_user is None:
+        cookie_user =request.cookies.get("registered_user", "")
+        session_user = session.get('user', "") 
+        if not cookie_user or not session_user:
+            session.clear()
             return redirect(url_for("login"))
 
         user_choice:str | None = request.args.get("choice")
         if user_choice is None:
             return render_template(
                 "game.html",
-                user = current_user,
-                pass_count = f"{current_user} is not choice")
+                user = session_user,
+                pass_count = f"{session_user} is not choice")
  
-        res:LoginResponse = loginCore.game_process(input_user_name=current_user,input_user_choice=user_choice)
+        res:LoginResponse = loginCore.game_process(input_user_name=session_user,input_user_choice=user_choice)
 
         game_user:GameModule|None = res.extra_data
         if game_user is None:
             return render_template(
                 template_name_or_list="game.html",
-                user=current_user,
+                user=session_user,
                 pass_count="extra_data failed"
             )
         

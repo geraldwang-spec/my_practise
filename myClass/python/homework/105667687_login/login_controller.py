@@ -89,7 +89,8 @@ class LoginController:
         if user.mail_ready == 0:
             return LoginResponse(
                 status=AuthStatus.MAIL_NOT_VERIFIED,
-                error_message="E-mail doesn't verify"
+                error_message="E-mail doesn't verify",
+                extra_data=user.username
             )
             # return LoginResponse(
             #     template="index.html",
