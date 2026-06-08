@@ -1,19 +1,30 @@
-from dataclasses import dataclass
 import os
 import random
-from tempfile import template
+from dataclasses import dataclass
+from enum import Enum
 from typing import Any
 from flask import Flask
 from flask.cli import load_dotenv
-from sqlalchemy import Null
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqliteProcess import DatabaseManager, GameModule, UserModule
 from UserDataModule import UserData as user
 from mailprocess import MailProcess as mailp
 
+class AuthStatus(str, Enum):
+    DEFAULT_FAIL= "DEFAULT_FAIL"
+    SUCCESS = "SUCCESS"
+    PASSWORD_ERROR = "PASSWORD_ERROR"
+    USER_NOT_FOUND= "USER_NOT_FOUND"
+    MAIL_NOT_VERIFIED = "MAIL_NOT_VERIFIED"
+    MAIL_CHECK_NUMBER_ERROR = "MAIL_CHECK_NUMBER_ERROR"
+    INVALID_CODE = "INVALID_CODE"
+    DATABASE_ERROR = "DATABASE_ERROR"
+    USER_NOT_CHOISE = "USER_NOT_CHOISE"
+
+
 @dataclass
 class LoginResponse:
-    template:str = ""
+    status:AuthStatus = AuthStatus.DEFAULT_FAIL 
     error_message:str = ""
     extra_data: Any|None = None
 
@@ -55,27 +66,44 @@ class LoginController:
         user = self.__userProcess.get_user_by_username(username)
         if not user:
             return LoginResponse(
-                template="index.html",
+                status=AuthStatus.USER_NOT_FOUND,
                 error_message="User wasn't register"
             )
+            # return LoginResponse(
+            #     template="index.html",
+            #     error_message="User wasn't register"
+            # )
 
         if check_password_hash( user.passwd, passwd) == False:
             return LoginResponse(
-                template="index.html",
+                status=AuthStatus.PASSWORD_ERROR,
                 error_message="user name or password fail",
                 extra_data=user.username
             )
+            # return LoginResponse(
+            #     template="index.html",
+            #     error_message="user name or password fail",
+            #     extra_data=user.username
+            # )
 
         if user.mail_ready == 0:
             return LoginResponse(
-                template="index.html",
+                status=AuthStatus.MAIL_NOT_VERIFIED,
                 error_message="E-mail doesn't verify"
             )
+            # return LoginResponse(
+            #     template="index.html",
+            #     error_message="E-mail doesn't verify"
+            # )
 
         return LoginResponse(
-            template="game",
+            status=AuthStatus.SUCCESS,
             extra_data=user.username
         )
+        # return LoginResponse(
+        #     template="game",
+        #     extra_data=user.username
+        # )
 
     def user_register(self, user_name:str, passwd:str, email:str, name:str)->LoginResponse:
         assert self.__userProcess is not None, "__userProcess should be init"
@@ -83,9 +111,12 @@ class LoginController:
 
         if user_c != None:
             return LoginResponse(
-                template="register.html",
-                error_message=f"{user_name} is exist"
-            )
+                status=AuthStatus.USER_NOT_FOUND,
+                error_message=f"{user_name} is exist")
+            # return LoginResponse(
+            #     template="register.html",
+            #     error_message=f"{user_name} is exist"
+            # )
 
         user_c = UserModule(
             username = user_name,
@@ -98,13 +129,17 @@ class LoginController:
 
         if self.__userProcess.create_user(user_c) == False:
             return LoginResponse(
-                template="register.html",
-                error_message=f"create {user_name} fail, try again"
-            )
+                status=AuthStatus.USER_NOT_FOUND,
+                error_message=f"create {user_name} fail, try again")
+            # return LoginResponse(
+            #     template="register.html",
+            #     error_message=f"create {user_name} fail, try again"
+            # )
 
         assert self.__mailproc is not None, "__mailproc should be init"
         self.__mailproc.start_mail_thread(user=user_c)
-        return LoginResponse(template="index.html")
+        return LoginResponse(status=AuthStatus.SUCCESS)
+        # return LoginResponse(template="index.html")
 
     def get_check_mail(self, user_name:str, number:str)->LoginResponse:
         assert self.__userProcess is not None, "__userProcess should be init"
@@ -112,32 +147,52 @@ class LoginController:
 
         if user_c == None:
             return LoginResponse(
-                template="mailcheck.html",
-                error_message="Register error, Please register again"
-            )
+                status=AuthStatus.USER_NOT_FOUND,
+                error_message="Register error, Please register again")
+            # return LoginResponse(
+            #     template="mailcheck.html",
+            #     error_message="Register error, Please register again"
+            # )
     
-        if eval(number) != user_c.mail_check_number:
+        try:
+            if int(number) != user_c.mail_check_number:
+                return LoginResponse(
+                    status=AuthStatus.MAIL_CHECK_NUMBER_ERROR,
+                    error_message="Check Mail fail, please register again"
+                )
+        except ValueError as e:
             return LoginResponse(
-                template="index.html",
-                error_message="Check Mail fail, please register again"
-            )
+                    status=AuthStatus.INVALID_CODE,
+                    error_message=f"Invalid Code {e}")
+        except Exception as e:
+            return LoginResponse(
+                    status=AuthStatus.INVALID_CODE,
+                    error_message=f"Other Exception {e}")
         
         if self.__userProcess.update_mail_ready(user_name, True) == False:
             return LoginResponse(
-                template="index.html",
-                error_message="register error, please register again"
-            )
+                status=AuthStatus.DATABASE_ERROR,
+                error_message= "register error, please register again")
+            # return LoginResponse(
+            #     template="index.html",
+            #     error_message="register error, please register again"
+            # )
 
-        return LoginResponse(
-            template="login")
+        return LoginResponse(status=AuthStatus.SUCCESS)
+        # return LoginResponse(
+        #     template="login")
 
     def game_process(self, input_user_name:str, input_user_choice:str)->LoginResponse:
         if input_user_choice == "":
             return LoginResponse(
-                template="game.html", 
+                status=AuthStatus.USER_NOT_CHOISE,
                 error_message=f"{input_user_name} or {input_user_choice} are not current input",
-                extra_data=GameModule(user_name=input_user_name)
-            )
+                extra_data=GameModule(user_name=input_user_name))
+            # return LoginResponse(
+            #     template="game.html", 
+            #     error_message=f"{input_user_name} or {input_user_choice} are not current input",
+            #     extra_data=GameModule(user_name=input_user_name)
+            # )
 
         target_game_user:GameModule|None = None
 
@@ -152,7 +207,7 @@ class LoginController:
         else:
             target_game_user.user_choice = input_user_choice
 
-        choices:list[str] = ["paper", "scissors", "tone"]
+        choices:list[str] = ["paper", "scissors", "stone"]
         target_game_user.computer_choice = choices[ random.randint(0, 2)]
         if input_user_choice == target_game_user.computer_choice:
                 target_game_user.result = "平手！"
@@ -163,13 +218,15 @@ class LoginController:
             target_game_user.pass_count += 1
         else:
             target_game_user.result = "你輸了...😢"
-
-
         
         return LoginResponse(
-            template="game.html",
+            status=AuthStatus.SUCCESS,
             error_message="",
             extra_data=target_game_user)
+        # return LoginResponse(
+        #     template="game.html",
+        #     error_message="",
+        #     extra_data=target_game_user)
 
 
 

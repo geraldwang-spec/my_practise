@@ -1,11 +1,6 @@
-from ctypes import cast
-from curses import raw
-import os
+from unittest import result
 from flask import Flask, Response, make_response, redirect, url_for, request, render_template, session
-from sqlalchemy.sql.functions import current_user
-# from flask_mail import Mail, Message
-# from threading import Thread
-from login_controller import LoginController as loginC, LoginResponse
+from login_controller import AuthStatus, LoginController as loginC, LoginResponse
 from sqliteProcess import GameModule
 
 
@@ -27,14 +22,29 @@ def create_app()->Flask:
             res:LoginResponse = loginCore.check_user_status(
                 username=user_name,
                 passwd=pass_wd)
-            if res.error_message != "":
-                return render_template(res.template, error_message = res.error_message)
-
-            resp:Response = make_response(redirect(url_for(res.template)))
-            resp.set_cookie(key="registered_user", value=user_name, max_age=600)
-            session["user"] = user_name
-            return resp
-            # return render_template(res.template, user=res.extra_data)
+        
+        if res.status == AuthStatus.USER_NOT_FOUND or \
+            res.status == AuthStatus.MAIL_NOT_VERIFIED:
+            return render_template(
+                    template_name_or_list="index.html",
+                    error_message = res.error_message)
+        
+        if res.status == AuthStatus.PASSWORD_ERROR:
+            res_user:GameModule|None = res.extra_data
+            if res_user is None:
+                return render_template(
+                template_name_or_list="index.html",
+                error_message="extra_data failed"
+            )
+            return render_template(
+                template_name_or_list= "index.html", 
+                    error_message = res.error_message,
+                    user = res_user.user_name)
+        
+        resp:Response = make_response(redirect(location=url_for(endpoint="game")))
+        resp.set_cookie(key="registered_user", value=user_name, max_age=600)
+        session["user"] = user_name
+        return resp
 
     @app.route('/register', methods = ['POST','GET'])
     def register():
@@ -44,12 +54,14 @@ def create_app()->Flask:
             email:str = request.form.get("email", "")
             name:str = request.form.get("name", "")
 
-            get_data= loginCore.user_register(user_name, passwd, email, name)
+            get_data:LoginResponse= loginCore.user_register(user_name, passwd, email, name)
 
-            if get_data.error_message != "":
-                return render_template(get_data.template, error_message = get_data.error_message)
+            if get_data.status != AuthStatus.SUCCESS:
+                return render_template(
+                    template_name_or_list="register",
+                    error_message = get_data.error_message)
 
-            return render_template(get_data.template)
+            return redirect(location=url_for(endpoint="login"))
         else: 
             return render_template('register.html')
     
@@ -75,19 +87,20 @@ def create_app()->Flask:
                 user=current_user,
                 pass_count="extra_data failed"
             )
-
-        if res.error_message != "":
+        
+        if res.status != AuthStatus.SUCCESS:
             return render_template(
-                template_name_or_list=res.template,
-                user=game_user.user_name,
-                pass_count = res.error_message)
+                template_name_or_list="game.html",
+                user = game_user.user_name,
+                result = res.error_message)
 
         return render_template(
-            template_name_or_list=res.template,
+            template_name_or_list="game.html",
             user = game_user.user_name,
             user_choice = game_user.user_choice,
             computer_choice = game_user.computer_choice,
-            pass_count = game_user.pass_count
+            pass_count = game_user.pass_count,
+            result = game_user.result
         )
 
     @app.route("/logout")
@@ -101,10 +114,12 @@ def create_app()->Flask:
             user_name=request.args.get("user",""), 
             number=request.args.get("mail_number",""))
 
-        if res.error_message != "":
-            return render_template(res.template, message=res.error_message)
+        if res.status != AuthStatus.SUCCESS:
+            return render_template(
+                template_name_or_list="mailcheck.html",
+                message = res.error_message)
 
-        return redirect(url_for("login"))
+        return redirect(location=url_for(endpoint="login"))
 
     return app
 
