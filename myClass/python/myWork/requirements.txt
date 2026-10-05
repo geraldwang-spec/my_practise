@@ -1,0 +1,13 @@
+flask == 3.1.3
+pymysql[rsa]
+pandas
+sqlalchemy
+Flask-Mail
+pymysql
+python-dotenv
+pydantic
+redis
+pytest
+groq
+nest_asyncio
+requests
