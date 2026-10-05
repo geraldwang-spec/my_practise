@@ -121,7 +121,7 @@ class LLMApiController:
                                  )
                              })
 
-                elif function_name == "product_data":
+                # elif function_name == "product_data":
 
 
 

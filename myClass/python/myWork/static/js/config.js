@@ -30,6 +30,24 @@ const APP_CONFIG = {
             "Welcome. I can help you search products, compare prices and find stores."
         }
       ]
+    },
+    {
+      id: "ml-api",
+      name: "ML API",
+      shortName: "ML",
+      icon: "◉",
+      navigation: [
+        {
+          id: "linearRegression",
+          name: "LinearRegression",
+          label: "LinearRegression",
+          icon: "☼",
+          description: "LinearRegression API",
+          placeholder: "Practise LinearRegression",
+          welcomeMessage:
+            "Welcome. I can help you check weather conditions, temperature and forecasts."
+        }
+      ]
     }
   ]
 };
