@@ -6,6 +6,7 @@
 
 const MLLab = (() => {
   const ML_API_ENDPOINT = "/mlapi/linearRegression";
+  const ML_API_GRADIENT_ENDPOINT = "/mlapi/gradientStep";
   const PAD = 30; // 圖表內距（px）
 
   const $ = (id) => document.getElementById(id);
@@ -320,8 +321,32 @@ const MLLab = (() => {
     if (!hasEnoughPoints()) return;
     stopTraining();
 
-    console.log("QOO");
+    const epochs = Number(epochInput.value);
+    const learningRate = Number(lrInput.value);
 
+    try {
+      gradientButton.disabled = true;
+      gradientButton.textContent = "TRAINING...";
+
+      const response = await fetch(ML_API_GRADIENT_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          module: currentNavigation ? currentNavigation.id : "linearRegression",
+          points: state.points,
+          learningRate,
+          epochs
+        })
+      });
+
+      console.log("QOO");
+    } catch (error) {
+      console.error("ML API Error:", error);
+      setStatus(`後端錯誤（${error.message}）。前端的 TRAIN 仍然可以使用。`);
+    } finally {
+      gradientButton.disabled = false;
+      gradientButton.textContent = "Gradient ON SERVER";
+    }
   }
 
   /* ---------- Canvas ---------- */
