@@ -8,6 +8,9 @@ const APP_CONFIG = {
       shortName: "LLM",
       icon: "◉",
 
+      // 右邊要顯示哪一種內容："chat" 或 "ml"
+      view: "chat",
+
       navigation: [
         {
           id: "weather",
@@ -35,17 +38,20 @@ const APP_CONFIG = {
       id: "ml-api",
       name: "ML API",
       shortName: "ML",
-      icon: "◉",
+      icon: "◈",
+
+      view: "ml",
+
       navigation: [
         {
           id: "linearRegression",
           name: "LinearRegression",
-          label: "LinearRegression",
-          icon: "☼",
+          label: "線性迴歸",
+          icon: "∕",
           description: "LinearRegression API",
           placeholder: "Practise LinearRegression",
           welcomeMessage:
-            "Welcome. I can help you check weather conditions, temperature and forecasts."
+            "Click the plot to add points, then train a line that fits them."
         }
       ]
     }

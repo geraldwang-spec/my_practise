@@ -1,0 +1,238 @@
+/* =========================
+   ML Lab — 延伸 styles.css
+========================= */
+
+/* 讓 hidden 屬性一定能把區塊藏起來 */
+.chat-page[hidden] {
+  display: none !important;
+}
+
+.ml-page h1 {
+  font-size: clamp(3.5rem, 6.5vw, 7rem);
+  overflow-wrap: anywhere;
+}
+
+.ml-layout {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 4vw;
+  align-items: stretch;
+}
+
+.ml-panel {
+  padding: 1.7rem;
+  border: var(--rule);
+}
+
+/* Plot */
+
+.ml-plot {
+  position: relative;
+  height: 380px;
+  margin: 1.4rem 0;
+  border-top: var(--rule-thin);
+  border-bottom: var(--rule-thin);
+}
+
+.ml-plot canvas,
+.ml-loss canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.ml-plot__hint {
+  position: absolute;
+  right: 0;
+  bottom: -1.4rem;
+  color: var(--gray);
+  font-size: 0.48rem;
+  letter-spacing: 0.08em;
+  pointer-events: none;
+}
+
+/* Controls */
+
+.ml-controls {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.6rem;
+  padding: 1.6rem 0 1.4rem;
+}
+
+.ml-control {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.ml-control__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  color: var(--gray);
+  font-size: 0.5rem;
+  letter-spacing: 0.18em;
+}
+
+.ml-control__head output {
+  color: var(--white);
+  font-family: var(--condensed);
+  font-size: 1.15rem;
+  letter-spacing: 0.04em;
+}
+
+.ml-control input[type="range"] {
+  width: 100%;
+  height: 14px;
+  background: transparent;
+  cursor: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.ml-control input[type="range"]::-webkit-slider-runnable-track {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.ml-control input[type="range"]::-moz-range-track {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.ml-control input[type="range"]::-webkit-slider-thumb {
+  width: 12px;
+  height: 12px;
+  margin-top: -6px;
+  background: var(--white);
+  border: none;
+  border-radius: 0;
+  -webkit-appearance: none;
+}
+
+.ml-control input[type="range"]::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: var(--white);
+  border: none;
+  border-radius: 0;
+}
+
+.ml-control input[type="range"]:focus-visible {
+  outline: 1px solid var(--white);
+  outline-offset: 4px;
+}
+
+/* Actions */
+
+.ml-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding-top: 1.2rem;
+  border-top: var(--rule);
+}
+
+.ml-button {
+  padding: 0.6rem 0.85rem;
+  color: var(--white);
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.ml-button:hover,
+.ml-button--primary {
+  color: var(--black);
+  background: var(--white);
+  border-color: var(--white);
+}
+
+.ml-button--primary:hover {
+  color: var(--white);
+  background: transparent;
+}
+
+.ml-button:disabled {
+  opacity: 0.35;
+}
+
+.ml-button:focus-visible {
+  outline: 1px solid var(--white);
+  outline-offset: 3px;
+}
+
+.ml-status {
+  min-height: 1.5em;
+  margin-top: 1rem;
+  color: rgba(255, 255, 255, 0.72);
+  font-family: var(--condensed);
+  font-size: 1.05rem;
+  font-weight: 300;
+  line-height: 1.45;
+}
+
+/* Info panel */
+
+.ml-formula {
+  display: block;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.ml-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.ml-metrics strong {
+  font-variant-numeric: tabular-nums;
+}
+
+.ml-metrics__wide {
+  grid-column: 1 / -1;
+}
+
+.ml-loss {
+  height: 120px;
+}
+
+.ml-gap {
+  margin-top: 1rem;
+}
+
+/* Mobile */
+
+@media (max-width: 800px) {
+  .ml-page h1 {
+    font-size: clamp(2.6rem, 11vw, 5rem);
+  }
+
+  .ml-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .ml-plot {
+    height: 300px;
+  }
+
+  .ml-controls {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .ml-panel {
+    padding: 1rem;
+  }
+
+  .ml-plot {
+    height: 260px;
+  }
+}

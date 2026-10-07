@@ -1,4 +1,9 @@
-from statistics import LinearRegression
+# from statistics import LinearRegression
+from pyexpat import model
+
+from flask import jsonify
+from modules.utils import MessageResponse
+from sklearn.linear_model import LinearRegression as linearR
 import matplotlib.pyplot as plt
 import seaborn as sns; sns.set()
 import numpy as np
@@ -45,6 +50,25 @@ class ml_example:
         cupsfix = model.predict(tempfit[:, np.newaxis])
         print("Model slope:", model.coef_[0])
         print("model intercept:", model.intercept_)
+
+    def process_linear_data(self, points)->MessageResponse:
+        x = np.array([p["x"] for p in points])
+        y = np.array([p["y"] for p in points])
+        print(x)
+        print(y)
+        model = linearR(fit_intercept=True)
+        model.fit(x[:, np.newaxis], y)
+
+        print("Model slope:", model.coef_[0])
+        print("model intercept:", model.intercept_)
+
+        return MessageResponse(success=True, 
+                               message="", 
+                               data={
+                                "w": float(model.coef_[0]), 
+                                "b": float(model.intercept_),
+                                "epochs":0})
+        
 
 
 

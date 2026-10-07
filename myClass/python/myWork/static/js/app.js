@@ -12,7 +12,12 @@ const themeName = document.getElementById("themeName");
 
 const sidebarNav = document.getElementById("sidebarNav");
 
+const topbarEyebrow = document.getElementById("topbarEyebrow");
 const topbarPage = document.getElementById("topbarPage");
+
+// 右邊的兩種內容
+const chatView = document.getElementById("chat");
+const mlView = document.getElementById("ml");
 const pageTitle = document.getElementById("pageTitle");
 const pageDescription = document.getElementById("pageDescription");
 const chatPanelTitle = document.getElementById("chatPanelTitle");
@@ -135,10 +140,10 @@ function switchTheme(themeId) {
   themeIcon.textContent = theme.icon;
   themeName.textContent = theme.name;
   infoTheme.textContent = theme.name;
+  topbarEyebrow.textContent = `${theme.name} — WORKSPACE`;
 
   renderNavigation();
-  updateNavigation(currentNavigation);
-  resetChat();
+  showView();
 
   localStorage.setItem("vora-theme", theme.id);
 }
@@ -153,7 +158,7 @@ function renderNavigation() {
   currentTheme.navigation.forEach((item, index) => {
     const link = document.createElement("a");
 
-    link.href = "#chat";
+    link.href = isMLView() ? "#ml" : "#chat";
     link.dataset.navigationId = item.id;
     link.className = index === 0 ? "active" : "";
 
@@ -195,7 +200,32 @@ function selectNavigation(navigationId) {
     );
   });
 
-  updateNavigation(navigation);
+  showView();
+}
+
+/* =========================
+   View（右邊顯示聊天室或 ML）
+========================= */
+
+function isMLView() {
+  return currentTheme.view === "ml";
+}
+
+function showView() {
+  const ml = isMLView();
+
+  chatView.hidden = ml;
+  mlView.hidden = !ml;
+
+  topbarPage.textContent = currentNavigation.name.toUpperCase();
+
+  if (ml) {
+    MLLab.show(currentNavigation, currentTheme);
+    return;
+  }
+
+  MLLab.hide();
+  updateNavigation(currentNavigation);
   resetChat();
 }
 

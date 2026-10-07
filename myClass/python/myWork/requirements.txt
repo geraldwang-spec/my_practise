@@ -11,3 +11,6 @@ pytest
 groq
 nest_asyncio
 requests
+scikit-learn
+matplotlib
+seaborn

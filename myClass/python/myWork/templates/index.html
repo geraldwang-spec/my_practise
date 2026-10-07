@@ -16,6 +16,7 @@
 
   <!-- <link rel="stylesheet" href="styles.css" /> -->
   <link rel="stylesheet" type="" href="/static/css/styles.css">
+  <link rel="stylesheet" href="/static/ML/ml.css">
 </head>
 
 <body>
@@ -64,7 +65,7 @@
       <!-- TOP BAR -->
       <header class="topbar">
         <div>
-          <span class="topbar__eyebrow">
+          <span class="topbar__eyebrow" id="topbarEyebrow">
             LLM API — WORKSPACE
           </span>
 
@@ -179,6 +180,132 @@
         </div>
       </section>
 
+      <!-- ML AREA（選 ML API theme 時顯示） -->
+      <section id="ml" class="chat-page ml-page" hidden>
+
+        <div class="chat-page__background-number">02</div>
+
+        <div class="chat-page__heading">
+          <span class="section-label">§ 02 — ML API</span>
+
+          <h1 id="mlPageTitle" data-reveal>
+            Train a<br>
+            <span>LinearRegression.</span>
+          </h1>
+
+          <p id="mlPageDescription" class="chat-page__description" data-reveal>
+            Click the plot to add points, then train a line that fits them.
+          </p>
+        </div>
+
+        <div class="ml-layout">
+
+          <!-- Training panel -->
+          <section class="ml-panel" data-reveal>
+
+            <div class="chat-panel__top">
+              <div>
+                <span class="chat-panel__eyebrow">TRAINING SESSION</span>
+                <h2 id="mlPanelTitle">LinearRegression Lab</h2>
+              </div>
+
+              <button id="clearPointsButton" class="chat-panel__clear" type="button">
+                CLEAR POINTS ×
+              </button>
+            </div>
+
+            <div class="ml-plot" id="plotWrap">
+              <canvas id="plotCanvas" aria-label="資料點與迴歸線"></canvas>
+              <span class="ml-plot__hint">左鍵新增資料點 / 右鍵刪除最近的點</span>
+            </div>
+
+            <div class="ml-controls">
+              <label class="ml-control">
+                <span class="ml-control__head">
+                  <span>LEARNING RATE</span>
+                  <output id="lrValue">0.300</output>
+                </span>
+                <input id="lrInput" type="range" min="0.001" max="1.5" step="0.001" value="0.3" />
+              </label>
+
+              <label class="ml-control">
+                <span class="ml-control__head">
+                  <span>EPOCHS</span>
+                  <output id="epochValue">300</output>
+                </span>
+                <input id="epochInput" type="range" min="10" max="3000" step="10" value="300" />
+              </label>
+
+              <label class="ml-control">
+                <span class="ml-control__head">
+                  <span>DATA NOISE</span>
+                  <output id="noiseValue">0.08</output>
+                </span>
+                <input id="noiseInput" type="range" min="0" max="0.3" step="0.01" value="0.08" />
+              </label>
+            </div>
+
+            <div class="ml-actions">
+              <button id="trainButton" class="ml-button ml-button--primary" type="button">TRAIN</button>
+              <button id="stepButton" class="ml-button" type="button">STEP ×1</button>
+              <button id="resetButton" class="ml-button" type="button">RESET W, B</button>
+              <button id="randomButton" class="ml-button" type="button">RANDOM DATA</button>
+              <button id="serverButton" class="ml-button" type="button">TRAIN ON SERVER</button>
+              <button id="gradientButton" class="ml-button" type="button">gradient ON SERVER</button>
+            </div>
+
+            <p id="statusText" class="ml-status" aria-live="polite"></p>
+          </section>
+
+          <!-- Right information panel -->
+          <aside class="chat-info" data-reveal>
+
+            <div class="chat-info__block">
+              <span class="chat-info__label">MODEL（實線）</span>
+              <strong id="formula" class="ml-formula">ŷ = 0.000x + 0.000</strong>
+              <span class="chat-info__label ml-gap">SERVER MODEL（虛線）</span>
+              <strong id="serverFormula" class="ml-formula">—</strong>
+            </div>
+
+            <hr />
+
+            <div class="chat-info__block ml-metrics">
+              <div>
+                <span class="chat-info__label">EPOCH</span>
+                <strong id="metricEpoch">0</strong>
+              </div>
+              <div>
+                <span class="chat-info__label">POINTS</span>
+                <strong id="metricPoints">0</strong>
+              </div>
+              <div class="ml-metrics__wide">
+                <span class="chat-info__label">MSE LOSS</span>
+                <strong id="metricLoss">—</strong>
+              </div>
+            </div>
+
+            <hr />
+
+            <div class="chat-info__block">
+              <span class="chat-info__label">LOSS CURVE</span>
+              <div class="ml-loss" id="lossWrap">
+                <canvas id="lossCanvas" aria-label="Loss 曲線"></canvas>
+              </div>
+            </div>
+
+            <hr />
+
+            <div class="chat-info__block">
+              <span class="chat-info__label">CURRENT THEME</span>
+              <strong id="mlInfoTheme">ML API</strong>
+              <span class="chat-info__label ml-gap">CURRENT MODULE</span>
+              <strong id="mlInfoModule">LinearRegression API</strong>
+            </div>
+          </aside>
+
+        </div>
+      </section>
+
       <hr class="rule" />
 
       <!-- FOOTER -->
@@ -205,6 +332,7 @@
   <!-- <script src="config.js"></script> -->
   <!-- <script src="app.js"></script> -->
   <script src="/static/js/config.js"></script>
+  <script src="/static/ML/ml.js"></script>
   <script src="/static/js/app.js"></script>
 </body>
 

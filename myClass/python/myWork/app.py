@@ -1,5 +1,6 @@
 from ast import main
 from flask import Blueprint, Flask, render_template, request
+from ML.ml_route import create_mlapi
 from llmapi.llmapi_route import create_llmapi
 
 
@@ -8,6 +9,8 @@ def create_app()->Flask:
 
     llmapi_blueprint:Blueprint= create_llmapi()
     app.register_blueprint(blueprint=llmapi_blueprint)
+    mlapi_blueprint:Blueprint = create_mlapi()
+    app.register_blueprint(blueprint=mlapi_blueprint)
 
     @app.route("/")
     def home():
